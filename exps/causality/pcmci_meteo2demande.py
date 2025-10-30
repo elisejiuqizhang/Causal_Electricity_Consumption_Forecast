@@ -82,7 +82,7 @@ df = df[1:51739]  # to avoid any potential issues with lag 0 in PCMCI
 
 
 # pcmci
-time_lag_max = 2  # hours
+time_lag_max = 3  # hours
 pc_alpha = 0.05
 
 var_names = meteo_vars + [ieso_var]
@@ -127,29 +127,62 @@ with open(os.path.join(OUTPUT_DIR, file_save_name+'_mci_parCorr.npy'), 'wb') as 
 # plt.close()
 
 
-alpha = pc_alpha
-min_abs_val = 0.10  # my cutoff value for cleaning up plots (eliminating weak links)
+
+
+
+# alpha = pc_alpha
+# min_abs_val = 0.10  # my cutoff value for cleaning up plots (eliminating weak links)
+
+# p = results['p_matrix']
+# val = results['val_matrix']
+# graph = results['graph'].copy()
+
+# # Keep links that are BOTH statistically significant and strong enough
+# keep = (p <= alpha) & (np.abs(val) >= min_abs_val)
+
+# # Build a pruned graph: empty string means "no link" for the plotters
+# graph_pruned = np.full_like(graph, '', dtype=object)
+# graph_pruned[keep] = graph[keep]
+
+# # (Optional) if you want the time-series graph as well, reuse graph_pruned
+# tp.plot_graph(graph=graph_pruned, val_matrix=val, var_names=var_names,
+#               link_colorbar_label='MCI', figsize=(12, 9))
+# plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_graph.png'))
+# plt.close()
+
+# tp.plot_time_series_graph(
+#     val_matrix=val, graph=graph_pruned, var_names=var_names,
+#     figsize=(12, 9), link_colorbar_label='MCI'
+# )
+# plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_tsgraph.png'))
+# plt.close()
+
+
+
+alpha= pc_alpha
+list_min_abs_val = [0.05, 0.10, 0.15]  # my cutoff values for cleaning up plots (eliminating weak links)
 
 p = results['p_matrix']
 val = results['val_matrix']
 graph = results['graph'].copy()
 
-# Keep links that are BOTH statistically significant and strong enough
-keep = (p <= alpha) & (np.abs(val) >= min_abs_val)
+for min_abs_val in list_min_abs_val:
+    # Keep links that are BOTH statistically significant and strong enough
+    keep = (p <= alpha) & (np.abs(val) >= min_abs_val)
 
-# Build a pruned graph: empty string means "no link" for the plotters
-graph_pruned = np.full_like(graph, '', dtype=object)
-graph_pruned[keep] = graph[keep]
+    # Build a pruned graph: empty string means "no link" for the plotters
+    graph_pruned = np.full_like(graph, '', dtype=object)
+    graph_pruned[keep] = graph[keep]
 
-# (Optional) if you want the time-series graph as well, reuse graph_pruned
-tp.plot_graph(graph=graph_pruned, val_matrix=val, var_names=var_names,
-              link_colorbar_label='MCI', figsize=(12, 9))
-plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_graph.png'))
-plt.close()
+    # (Optional) if you want the time-series graph as well, reuse graph_pruned
+    tp.plot_graph(graph=graph_pruned, val_matrix=val, var_names=var_names,
+                  link_colorbar_label='MCI', figsize=(12, 9))
+    plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_graph.png'))
+    plt.close()
 
-tp.plot_time_series_graph(
-    val_matrix=val, graph=graph_pruned, var_names=var_names,
-    figsize=(12, 9), link_colorbar_label='MCI'
-)
-plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_tsgraph.png'))
-plt.close()
+    tp.plot_time_series_graph(
+        val_matrix=val, graph=graph_pruned, var_names=var_names,
+        figsize=(12, 9), link_colorbar_label='MCI'
+    )
+    plt.savefig(os.path.join(OUTPUT_DIR, file_save_name + f'_alpha{alpha}_min{min_abs_val}_tsgraph.png'))
+    plt.close()

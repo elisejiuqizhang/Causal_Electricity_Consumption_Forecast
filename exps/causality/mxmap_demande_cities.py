@@ -37,7 +37,7 @@ for other_df in list_dfs[1:]:
 df = df.set_index('TIMESTAMP')
 
 # create MXMap object
-model=MXMap(df, tau=3, emd=5, score_type='corr', bivCCM_thres=0.75, pcm_thres=0.5, knn=10, L=5000, method='vanilla')
+model=MXMap(df, tau=3, emd=5, score_type='corr', bivCCM_thres=0.75, pcm_thres=0.5, knn=10, L=4000, method='vanilla')
 file_dir = os.path.join(OUTPUT_DIR, f'demande_lag{model.tau}_emd{model.emd}')
 
 start_time = time.time()
