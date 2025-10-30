@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from typing import Iterable, Optional, Union, Mapping, Callable
 
-def add_hourly_calendar_features(
+def add_time_features(
     df: pd.DataFrame,
     time_col: str,
     *,
@@ -14,7 +14,7 @@ def add_hourly_calendar_features(
 ) -> pd.DataFrame:
     """
     Adds: hour, day_of_week, day_of_month, day_of_year, quarter, month,
-    is_weekend, is_holiday (optional).
+    is_weekend, is_holiday (optional) and cyclical features for hour, day of week, and month.
 
     Parameters
     ----------
@@ -38,7 +38,6 @@ def add_hourly_calendar_features(
     ts = pd.to_datetime(out[time_col], utc=True, errors="coerce")
     if tz:
         ts = ts.dt.tz_convert(tz)
-    # use naive for feature ops
     ts = ts.dt.tz_localize(None)
 
     out["hour"]          = ts.dt.hour
@@ -60,10 +59,17 @@ def add_hourly_calendar_features(
                 holi_set = set(holidays)
             out["is_holiday"] = dates.isin(holi_set).astype("int8")
 
+    # Add cyclical encodings
+    out["hour_sin"] = np.sin(2 * np.pi * out["hour"] / 24.0)
+    out["hour_cos"] = np.cos(2 * np.pi * out["hour"] / 24.0)
+    out["dow_sin"]  = np.sin(2 * np.pi * out["day_of_week"] / 7.0)
+    out["dow_cos"]  = np.cos(2 * np.pi * out["day_of_week"] / 7.0)
+    out["month_sin"] = np.sin(2 * np.pi * out["month"] / 12.0)
+    out["month_cos"] = np.cos(2 * np.pi * out["month"] / 12.0)
+
     if drop_original:
         out = out.drop(columns=[time_col])
     return out
-
 
 # test
 # file_path='/home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/data/era5/toronto_era5_timeseries.csv.gz'
