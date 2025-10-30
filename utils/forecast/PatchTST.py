@@ -118,9 +118,18 @@ class PatchTSTModel(nn.Module):
         # Flatten all channels and patches: shape (B, C * patch_num * d_model)
         x_flattened = x_enc_out.reshape(B, C * self.patch_num * self.d_model)
         pred = self.head_linear(x_flattened)  # shape (B, num_targets * H)
-        # Reshape to (B, num_targets, H)
+
+        # # Reshape to (B, num_targets, H)
+        # if self.num_targets > 1:
+        #     pred = pred.view(B, self.num_targets, self.output_horizon)
+        # else:
+        #     pred = pred.view(B, 1, self.output_horizon)
+        # return pred
+
+        # Reshape to (B, H, C)
         if self.num_targets > 1:
-            pred = pred.view(B, self.num_targets, self.output_horizon)
+            pred = pred.view(B, self.output_horizon, self.num_targets)
         else:
-            pred = pred.view(B, 1, self.output_horizon)
+            pred = pred.view(B, self.output_horizon, 1)
         return pred
+

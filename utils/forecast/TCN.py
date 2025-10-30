@@ -73,5 +73,6 @@ class TCNModel(nn.Module):
         else:
             raise RuntimeError(f"Unexpected shape from tcn: {tuple(y.shape)}")
         out = self.fc(last_step)      # (B, num_targets*H)
-        out = out.view(out.size(0), self.num_targets, self.output_horizon)
+        # out = out.view(out.size(0), self.num_targets, self.output_horizon)
+        out = out.view(out.size(0), self.output_horizon, self.num_targets)
         return out
