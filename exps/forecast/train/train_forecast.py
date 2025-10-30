@@ -140,6 +140,10 @@ def merge_city_elec_meteo(elec_csv: str, meteo_csv: str) -> pd.DataFrame:
     # inner join to ensure aligned hours
     df = de.merge(dm, on='time', how="inner")
     df = df.sort_values('time').reset_index(drop=True)
+
+    # avoid NaN
+    df = df[1:51739]  # to avoid any potential issues with NaN
+
     return df
 
 def prepare_city_frame(cfg: SeriesConfig, features: List[str], target_col="load", include_past_load=True) -> pd.DataFrame:
@@ -160,12 +164,26 @@ def prepare_city_frame(cfg: SeriesConfig, features: List[str], target_col="load"
 
     return df[keep].copy()
 
-def standardize_train_val_test(train_df, val_df, test_df, cols: List[str]) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, StandardScaler]:
+# def standardize_train_val_test(train_df, val_df, test_df, cols: List[str]) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, StandardScaler]:
+#     scaler = StandardScaler()
+#     train_df[cols] = scaler.fit_transform(train_df[cols].to_numpy())
+#     val_df[cols]   = scaler.transform(val_df[cols].to_numpy())
+#     test_df[cols]  = scaler.transform(test_df[cols].to_numpy())
+#     return train_df, val_df, test_df, scaler
+
+
+def standardize_train_val_test(train_df, val_df, test_df, cols: List[str]):
+    # work on copies to avoid chained assignment warnings
+    train_df = train_df.copy()
+    val_df   = val_df.copy()
+    test_df  = test_df.copy()
+
     scaler = StandardScaler()
-    train_df[cols] = scaler.fit_transform(train_df[cols].to_numpy())
-    val_df[cols]   = scaler.transform(val_df[cols].to_numpy())
-    test_df[cols]  = scaler.transform(test_df[cols].to_numpy())
+    train_df.loc[:, cols] = scaler.fit_transform(train_df[cols].to_numpy())
+    val_df.loc[:, cols]   = scaler.transform(val_df[cols].to_numpy())
+    test_df.loc[:, cols]  = scaler.transform(test_df[cols].to_numpy())
     return train_df, val_df, test_df, scaler
+
 
 def make_loaders(Xtr, Ytr, Xva, Yva, Xte, Yte, batch_size=128):
     ds_tr = RollingWindowDataset(Xtr, Ytr)
@@ -255,7 +273,10 @@ def train_loop(model, loaders, device, epochs=20, lr=1e-3, ckpt_path=None):
                 va_loss += loss.item() * xb.size(0)
         va_loss /= max(1, len(loaders["val"].dataset))
 
-        print(f"[Epoch {ep:03d}] train MSE={tr_loss:.6f}  val MSE={va_loss:.6f}")
+        # print(f"[Epoch {ep:03d}] train MSE={tr_loss:.6f}  val MSE={va_loss:.6f}")
+        print(f"[Epoch {ep:03d}] train MSE={tr_loss:.3f} (RMSE={tr_loss**0.5:.3f})  "
+                f"val MSE={va_loss:.3f} (RMSE={va_loss**0.5:.3f})")
+
 
         if va_loss < best_val and ckpt_path is not None:
             best_val = va_loss
@@ -349,7 +370,11 @@ def run_mode(args):
         input_dim = W["Xtr"].shape[-1]
         model = make_model(args.model, input_dim, args.horizon, args.model_class, args.model_module, args.model_kwargs).to(device)
         _ = train_loop(model, loaders, device, epochs=args.epochs, lr=args.lr, ckpt_path=ckpt_path)
-        if os.path.exists(ckpt_path): model.load_state_dict(torch.load(ckpt_path, map_location=device))
+
+        if os.path.exists(ckpt_path):
+            state = torch.load(ckpt_path, map_location=device, weights_only=True)
+            model.load_state_dict(state, strict=True)
+
         yhat = predict(model, loaders["test"], device)  # (N,H)
         ytrue = W["Yte"]                                # (N,H)
 
@@ -376,7 +401,10 @@ def run_mode(args):
         input_dim = Xtr.shape[-1]
         model = make_model(args.model, input_dim, args.horizon, args.model_class, args.model_module, args.model_kwargs).to(device)
         _ = train_loop(model, loaders, device, epochs=args.epochs, lr=args.lr, ckpt_path=ckpt_path)
-        if os.path.exists(ckpt_path): model.load_state_dict(torch.load(ckpt_path, map_location=device))
+        if os.path.exists(ckpt_path):
+            state = torch.load(ckpt_path, map_location=device, weights_only=True)
+            model.load_state_dict(state, strict=True)
+
 
         all_rows = []
         per_city_metrics = {}
@@ -407,7 +435,10 @@ def run_mode(args):
         input_dim = W["Xtr"].shape[-1]
         model = make_model(args.model, input_dim, args.horizon, args.model_class, args.model_module, args.model_kwargs).to(device)
         _ = train_loop(model, loaders, device, epochs=args.epochs, lr=args.lr, ckpt_path=ckpt_path)
-        if os.path.exists(ckpt_path): model.load_state_dict(torch.load(ckpt_path, map_location=device))
+        if os.path.exists(ckpt_path):
+            state = torch.load(ckpt_path, map_location=device, weights_only=True)
+            model.load_state_dict(state, strict=True)
+
         yhat = predict(model, loaders["test"], device)
         ytrue = W["Yte"]
         yhat_last, ytrue_last = yhat[:, -1], ytrue[:, -1]
