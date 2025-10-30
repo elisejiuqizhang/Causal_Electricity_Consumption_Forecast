@@ -8,7 +8,7 @@ class TCNModel(nn.Module):
     """
     def __init__(
         self,
-        input_channels,
+        input_dim,
         output_horizon,
         num_targets=4,
         hidden_channels=64,
@@ -24,7 +24,7 @@ class TCNModel(nn.Module):
         self.num_targets     = num_targets
 
         layers = []
-        in_ch = input_channels
+        in_ch = input_dim
         dilation = 1
         for _ in range(levels):
             out_ch = hidden_channels

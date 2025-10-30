@@ -10,7 +10,7 @@ class PatchTSTModel(nn.Module):
     Outputs: y -> (batch, num_targets, H)
     """
     def __init__(self, 
-                 input_channels, 
+                 input_dim, 
                  output_horizon, 
                  num_targets=1, 
                  context_length=168, 
@@ -22,7 +22,7 @@ class PatchTSTModel(nn.Module):
                  d_ff=128, 
                  dropout=0.1):
         super().__init__()
-        self.input_channels = input_channels
+        self.input_dim = input_dim
         self.output_horizon = output_horizon
         self.num_targets = num_targets
         self.context_length = context_length
@@ -40,7 +40,7 @@ class PatchTSTModel(nn.Module):
         
         # Channel-independent patch embedding layers (one Linear per input channel)
         self.patch_embeds = nn.ModuleList([
-            nn.Linear(patch_len, d_model) for _ in range(input_channels)
+            nn.Linear(patch_len, d_model) for _ in range(input_dim)
         ])
         
         # Positional encoding for patch positions (fixed sinusoidal encoding)
@@ -59,7 +59,7 @@ class PatchTSTModel(nn.Module):
         
         # Prediction head: linear mapping from flattened encoder outputs to forecast horizon
         # Input features to linear = C_in * patch_num * d_model, output = num_targets * H
-        self.head_linear = nn.Linear(input_channels * patch_num * d_model, output_horizon * num_targets)
+        self.head_linear = nn.Linear(input_dim * patch_num * d_model, output_horizon * num_targets)
     
     def forward(self, x):
         """

@@ -1,5 +1,8 @@
 # exp/train/train_forecast.py
-import os, json, math, argparse, random
+import os, sys, json, math, argparse, random
+ROOT= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(ROOT)
+
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Optional
 
@@ -131,16 +134,16 @@ def load_csv(path: str, time_col="time") -> pd.DataFrame:
     df = df.sort_values(time_col).reset_index(drop=True)
     return df
 
-def merge_city_elec_meteo(elec_csv: str, meteo_csv: str, time_col="time") -> pd.DataFrame:
-    de = load_csv(elec_csv, time_col=time_col)
-    dm = load_csv(meteo_csv, time_col=time_col)
+def merge_city_elec_meteo(elec_csv: str, meteo_csv: str) -> pd.DataFrame:
+    de = load_csv(elec_csv, time_col='TIMESTAMP').rename(columns={'TIMESTAMP':'time'})
+    dm = load_csv(meteo_csv, time_col='time')
     # inner join to ensure aligned hours
-    df = de.merge(dm, on=time_col, how="inner")
-    df = df.sort_values(time_col).reset_index(drop=True)
+    df = de.merge(dm, on='time', how="inner")
+    df = df.sort_values('time').reset_index(drop=True)
     return df
 
 def prepare_city_frame(cfg: SeriesConfig, features: List[str], target_col="load", include_past_load=True) -> pd.DataFrame:
-    df = merge_city_elec_meteo(cfg.elec_path, cfg.meteo_path, time_col="time")
+    df = merge_city_elec_meteo(cfg.elec_path, cfg.meteo_path)
     df = time_features(df, time_col="time")
 
     # validate availability
@@ -289,7 +292,7 @@ def run_mode(args):
     features = [f.strip() for f in args.features.split(",")] if args.features else []
     exp_dir = ensure_dir(os.path.join(args.save_dir, args.exp_name))
     ensure_dir(os.path.join(exp_dir, "figures"))
-    ckpt_path = os.path.join(exp_dir, "checkpoints", "best.pt"))
+    ckpt_path = os.path.join(exp_dir, "checkpoints", "best.pt")
 
     # Prepare merged frames per city
     per_city_frames = {
@@ -453,7 +456,7 @@ if __name__ == "__main__":
     p.add_argument("--mode", choices=["per_city","multi_city","total"], required=True)
     p.add_argument("--features", type=str, default="",
                    help="Comma-separated weather feature names from the meteo CSVs. Datetime features are auto; load_past is optional.")
-    p.add_argument("--target-col", type=str, default="load")
+    p.add_argument("--target-col", type=str, default="TOTAL_CONSUMPTION")
     p.add_argument("--include-past-load", action="store_true", default=True,
                    help="Adds 'load_past' as an input feature (copy of target series). Target itself is never standardized.")
     p.add_argument("--history", type=int, default=168, help="lookback length (hours)")

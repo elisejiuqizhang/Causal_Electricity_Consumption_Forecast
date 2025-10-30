@@ -6,12 +6,12 @@ class LSTMForecaster(nn.Module):
     Returns (B, H, C) from input (B, L, C_in) with batch_first=True.
     This matches PyTorch's documented LSTM I/O when using batch_first. 
     """
-    def __init__(self, input_size, hidden_size, num_layers, output_size, dropout=0.0, horizon=24):
+    def __init__(self, input_dim, hidden_size, num_layers, output_size, dropout=0.0, horizon=24):
         super().__init__()
         self.horizon = horizon
         self.out_dim = output_size
         self.rnn = nn.LSTM(
-            input_size=input_size,
+            input_size=input_dim,
             hidden_size=hidden_size,
             num_layers=num_layers,
             batch_first=True,                        # (B, L, C_in) ✔
@@ -36,12 +36,12 @@ class GRUForecaster(nn.Module):
     Returns (B, H, C) from input (B, L, C_in) with batch_first=True.
     This matches PyTorch's documented GRU I/O when using batch_first. 
     """
-    def __init__(self, input_size, hidden_size, num_layers, output_size, dropout=0.0, horizon=24):
+    def __init__(self, input_dim, hidden_size, num_layers, output_size, dropout=0.0, horizon=24):
         super().__init__()
         self.horizon = horizon
         self.out_dim = output_size
         self.rnn = nn.GRU(
-            input_size=input_size,
+            input_size=input_dim,
             hidden_size=hidden_size,
             num_layers=num_layers,
             batch_first=True,                        # (B, L, C_in) ✔

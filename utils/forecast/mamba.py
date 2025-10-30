@@ -19,7 +19,7 @@ class ForecastHead(nn.Module):
 class MambaForecaster(nn.Module):
     def __init__(
         self, 
-        in_dim, 
+        input_dim, 
         d_model, 
         n_layers, 
         d_state, 
@@ -41,7 +41,7 @@ class MambaForecaster(nn.Module):
             d_conv=d_conv, 
             expand_factor=expand
         )
-        self.embed = nn.Linear(in_dim, d_model)
+        self.embed = nn.Linear(input_dim, d_model)
         self.backbone = Mamba(cfg)
         self.mode = mode
         self.horizon = horizon
@@ -56,7 +56,7 @@ class MambaForecaster(nn.Module):
             raise ValueError("mode must be either 'multi' or 'uni'")
 
     def forward(self, x):
-        # x: (B, C_in, L) or (B, Lin, in_dim)
+        # x: (B, C_in, L) or (B, Lin, input_dim)
         x = x.transpose(1, 2)  # -> (B, L, C_in)
         x = self.embed(x)      # (B, L, d_model)
         y = self.backbone(x)   # (B, L, d_model)
