@@ -509,7 +509,7 @@ if __name__ == "__main__":
     p.add_argument("--model-kwarg", action="append", default=[],
                    help="Repeatable: pass key=value args to the model (e.g., d_model=128 embed=timeF hidden_dim=256)")
 
-    p.add_argument("--save-dir", type=str, default="output/forecast/train_runs")
+    p.add_argument("--save-dir", type=str, default="outputs/forecast/train_runs")
     p.add_argument("--exp-name", type=str, default="debug")
 
     args = p.parse_args()
