@@ -8,7 +8,7 @@ from tigramite.independence_tests.parcorr import ParCorr
 from tigramite.independence_tests.robust_parcorr import RobustParCorr
 from tigramite.independence_tests.parcorr_wls import ParCorrWLS   
 
-def create_pcmci(dataframe, var_names=None, time_lag_max=1, robust=False, wls=False):
+def create_pcmci(dataframe, var_names=None, robust=False, wls=False):
     """
     Create a PCMCI or LPCMCI object from a pandas DataFrame.
 
@@ -45,10 +45,12 @@ def create_pcmci(dataframe, var_names=None, time_lag_max=1, robust=False, wls=Fa
     else:
         indep_test = ParCorr(significance='analytic')
 
-    if time_lag_max > 1:
-        pcmci = LPCMCI(dataframe=data, cond_ind_test=indep_test, verbosity=1)
-    else:
-        pcmci = PCMCI(dataframe=data, cond_ind_test=indep_test, verbosity=1)
+    # if time_lag_max > 1:
+    #     pcmci = LPCMCI(dataframe=data, cond_ind_test=indep_test, verbosity=1)
+    # else:
+    #     pcmci = PCMCI(dataframe=data, cond_ind_test=indep_test, verbosity=1)
+
+    pcmci = PCMCI(dataframe=data, cond_ind_test=indep_test, verbosity=1)
 
     return pcmci
 
