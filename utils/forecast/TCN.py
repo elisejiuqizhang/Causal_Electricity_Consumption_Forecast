@@ -1,16 +1,19 @@
 import torch
 import torch.nn as nn
+try:
+    # New recommended API
+    from torch.nn.utils.parametrizations import weight_norm
+except ImportError:
+    # Fallback for older torch
+    from torch.nn.utils import weight_norm
+
 
 class TCNModel(nn.Module):
-    """
-    Inputs:  x  -> (batch, C_in, L)
-    Outputs: y  -> (batch, num_targets, H)
-    """
     def __init__(
         self,
         input_dim,
-        output_horizon,
-        num_targets=4,
+        horizon,
+        num_targets=1,          
         hidden_channels=64,
         levels=4,
         kernel_size=3,
@@ -20,59 +23,44 @@ class TCNModel(nn.Module):
         super().__init__()
 
         self.hidden_channels = hidden_channels
-        self.output_horizon  = output_horizon
+        self.output_horizon  = horizon
         self.num_targets     = num_targets
 
         layers = []
-        in_ch = input_dim
+        in_ch = input_dim             # Conv1d in_channels == feature dim D
         dilation = 1
         for _ in range(levels):
             out_ch = hidden_channels
-            pad = (kernel_size - 1) * dilation
-            conv = nn.Conv1d(in_ch, out_ch, kernel_size, dilation=dilation, padding=pad)
-            layers += [nn.utils.weight_norm(conv), nn.ReLU(), nn.Dropout(dropout)]
+            pad = (kernel_size - 1) * dilation  # causal padding, will trim after conv
+            conv = nn.Conv1d(in_ch, out_ch, kernel_size,
+                             dilation=dilation, padding=pad)
+            # Use parametrizations.weight_norm (new) if available
+            conv = weight_norm(conv)
+            layers += [conv, nn.ReLU(), nn.Dropout(dropout)]
             in_ch = out_ch
             dilation *= dilation_base
 
         self.tcn = nn.Sequential(*layers)
-        self.fc = nn.Linear(hidden_channels, output_horizon * num_targets)
-        self.num_targets = num_targets
-        self.output_horizon = output_horizon
+        self.fc  = nn.Linear(hidden_channels, self.output_horizon * num_targets)
 
     def forward(self, x):
-        # x: (B, C, L)
-        y = self.tcn(x)               # (B, hidden, L')
+        """
+        x: (B, L, D) from the dataloader
+        returns: (B, horizon, num_targets)
+        """
+        # Conv1d expects (B, C, L) => transpose (B, L, D) -> (B, D, L)
+        if x.dim() != 3:
+            raise RuntimeError(f"Expected 3D input (B,L,D), got {tuple(x.shape)}")
+        x = x.transpose(1, 2)  # (B, D, L)
+        L = x.size(-1)
 
-        if y.dim()==3:
-            # last_step = y[:, :, -1]       # (B, hidden)
+        y = self.tcn(x)       # (B, hidden, L + extra)
+        # Causal padding adds future time; trim back to original length
+        if y.size(-1) != L:
+            y = y[..., :L]    # keep only past+current
 
-            B, C, T = y.shape
-            if C == self.hidden_channels:
-                last_step = y[:, :, -1]      # (B, hidden)
-            elif T == self.hidden_channels:
-                # Got (B, L', hidden): time/channel swapped by upstream block
-                last_step = y[:, -1, :]      # (B, hidden)
-            else:
-                raise RuntimeError(f"Unexpected 3D shape from tcn: {tuple(y.shape)}; "
-                                   f"hidden={self.hidden_channels}")
-            
-        elif y.dim()==2:
-            # last_step=y
-
-            # Could be (B, hidden) OR (hidden, L')
-            B, F = y.shape
-            if F == self.hidden_channels:
-                last_step = y                 # (B, hidden)
-            elif B == self.hidden_channels:
-                # Treat as (hidden, L'): take last time and add batch dim = 1
-                last_step = y[:, -1].unsqueeze(0)  # (1, hidden)
-            else:
-                raise RuntimeError(f"Unexpected 2D shape from tcn: {tuple(y.shape)}; "
-                                   f"hidden={self.hidden_channels}")
-
-        else:
-            raise RuntimeError(f"Unexpected shape from tcn: {tuple(y.shape)}")
-        out = self.fc(last_step)      # (B, num_targets*H)
-        # out = out.view(out.size(0), self.num_targets, self.output_horizon)
+        # Use the last time step features
+        last_step = y[:, :, -1]           # (B, hidden)
+        out = self.fc(last_step)          # (B, horizon * num_targets)
         out = out.view(out.size(0), self.output_horizon, self.num_targets)
         return out

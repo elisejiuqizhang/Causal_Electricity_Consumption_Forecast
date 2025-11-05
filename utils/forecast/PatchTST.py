@@ -1,4 +1,3 @@
-# utils/model/PatchTST.py
 import math
 import torch
 import torch.nn as nn
@@ -6,8 +5,9 @@ import torch.nn as nn
 class PatchTSTModel(nn.Module):
     """
     Patch Time Series Transformer (PatchTST) Model.
-    Inputs: x -> (batch, C_in, L)
-    Outputs: y -> (batch, num_targets, H)
+    Inputs (from loader): x -> (B, L, D)   # <- changed: accept (B, L, D)
+    Internally: we transpose to (B, C_in, L) for patching per channel.
+    Outputs: y -> (B, H, num_targets)  [your trainer will squeeze if last dim==1]
     """
     def __init__(self, 
                  input_dim, 
@@ -50,86 +50,72 @@ class PatchTSTModel(nn.Module):
         div_term = torch.exp(torch.arange(0, d_model, 2, dtype=torch.float) * -(math.log(10000.0) / d_model))
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        self.register_buffer("positional_encoding", pe)  # not trainable, for adding to patches
+        self.register_buffer("positional_encoding", pe)  # not trainable
         
-        # Transformer encoder: stacks of self-attention layers
-        encoder_layer = nn.TransformerEncoderLayer(d_model=d_model, nhead=n_heads, 
-                                                  dim_feedforward=d_ff, dropout=dropout, activation='gelu')
+        # Transformer encoder (batch_first=True so we can stay (B, S, E))
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=n_heads,
+            dim_feedforward=d_ff, dropout=dropout,
+            activation='gelu', batch_first=True   # <- important
+        )
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
         
-        # Prediction head: linear mapping from flattened encoder outputs to forecast horizon
-        # Input features to linear = C_in * patch_num * d_model, output = num_targets * H
+        # Prediction head
         self.head_linear = nn.Linear(input_dim * patch_num * d_model, output_horizon * num_targets)
     
     def forward(self, x):
         """
-        x: Tensor of shape (B, C_in, L)
-        Returns: Tensor of shape (B, num_targets, H)
+        x: Tensor of shape (B, L, D) from the dataloader
+        Returns: Tensor of shape (B, H, num_targets)
         """
-        B, C, L = x.shape
+        if x.dim() != 3:
+            raise RuntimeError(f"Expected (B,L,D), got {tuple(x.shape)}")
+
+        B, L, D = x.shape
         if L != self.context_length:
-            # The model was configured for a specific context_length
             raise RuntimeError(f"Input length {L} != model.context_length {self.context_length}")
+        if D != self.input_dim:
+            raise RuntimeError(f"Input dim {D} != model.input_dim {self.input_dim}")
+
+        # transpose to (B, C, L) for channel-wise patching
+        x = x.transpose(1, 2)  # (B, D, L) == (B, C, L)
+
+        # positional encoding for device
+        pe = self.positional_encoding[:self.patch_num, :].to(x.device)  # (patch_num, d_model)
         
-        # Use positional encoding for `patch_num` length on the device of x
-        pe = self.positional_encoding[:self.patch_num, :].to(x.device)  # shape (patch_num, d_model)
-        
-        # 1. Patch Extraction: split each channel's sequence into patches
-        # Flatten batch and channel dims to apply unfold in one go
-        x_flat = x.view(B * C, L)  # shape (B*C, L)
-        # Determine if padding is needed for the last patch
+        # 1) Patch extraction per channel
+        B_, C, L_ = x.shape
+        x_flat = x.reshape(B_ * C, L_)  # (B*C, L)
         total_length_needed = (self.patch_num - 1) * self.patch_stride + self.patch_len
-        if total_length_needed > L:
-            # Pad with last value to reach the needed length
-            pad_length = total_length_needed - L
+        if total_length_needed > L_:
+            pad_length = total_length_needed - L_
             last_val = x_flat[:, -1:].detach()
-            pad_tensor = last_val.repeat(1, pad_length)  # repeat last value
-            x_flat = torch.cat([x_flat, pad_tensor], dim=1)  # now length = total_length_needed
-        # Unfold into patches: shape (B*C, patch_num, patch_len)
-        patches = x_flat.unfold(dimension=1, size=self.patch_len, step=self.patch_stride)
-        patches = patches[:, :self.patch_num, :]  # ensure correct number of patches
-        # Reshape to (B, C, patch_num, patch_len)
-        patches = patches.view(B, C, self.patch_num, self.patch_len)
+            pad_tensor = last_val.repeat(1, pad_length)
+            x_flat = torch.cat([x_flat, pad_tensor], dim=1)
+        patches = x_flat.unfold(dimension=1, size=self.patch_len, step=self.patch_stride)  # (B*C, patch_num, patch_len)
+        patches = patches[:, :self.patch_num, :]
+        patches = patches.view(B_, C, self.patch_num, self.patch_len)  # (B, C, patch_num, patch_len)
         
-        # 2. Patch Embedding: apply channel-specific linear to each patch
-        # x_embed shape: (B, C, patch_num, d_model)
+        # 2) Patch embedding (channel-specific linear)
         embed_list = []
         for ch in range(C):
-            # Linear mapping for channel `ch`: (B, patch_num, patch_len) -> (B, patch_num, d_model)
-            emb = self.patch_embeds[ch](patches[:, ch, :, :])  # apply along last dim
+            emb = self.patch_embeds[ch](patches[:, ch, :, :])  # (B, patch_num, d_model)
             embed_list.append(emb)
-        x_embed = torch.stack(embed_list, dim=1)  # stack embeddings for all channels
+        x_embed = torch.stack(embed_list, dim=1)  # (B, C, patch_num, d_model)
         
-        # 3. Add positional encoding to patch embeddings
-        # Broadcast `pe` (patch_num, d_model) to (B, C, patch_num, d_model) and add
-        x_embed = x_embed + pe.unsqueeze(0).unsqueeze(0)  # add positional encoding
+        # 3) Add positional encoding
+        x_embed = x_embed + pe.unsqueeze(0).unsqueeze(0)  # (B, C, patch_num, d_model)
         
-        # 4. Transformer Encoder: process each channel's patch sequence independently
-        # Prepare input for encoder: flatten channels into batch dimension
-        x_enc_in = x_embed.view(B * C, self.patch_num, self.d_model)  # shape (B*C, patch_num, d_model)
-        # Transpose to shape (patch_num, B*C, d_model) as expected by PyTorch's Transformer
-        x_enc_in = x_enc_in.permute(1, 0, 2)  # (S, N, E) where S=patch_num, N=B*C
-        # Forward through Transformer encoder (self-attention over patches, per channel sequence)
-        x_enc_out = self.encoder(x_enc_in)  # shape (patch_num, B*C, d_model)
-        # Transpose back and reshape: (B*C, patch_num, d_model) -> (B, C, patch_num, d_model)
-        x_enc_out = x_enc_out.permute(1, 0, 2).contiguous().view(B, C, self.patch_num, self.d_model)
+        # 4) Transformer Encoder: process each channel independently
+        # Flatten channels into batch dim, keep batch_first=True => (B*C, patch_num, d_model)
+        x_enc_in = x_embed.view(B_ * C, self.patch_num, self.d_model)
+        x_enc_out = self.encoder(x_enc_in)  # (B*C, patch_num, d_model)
+        x_enc_out = x_enc_out.view(B_, C, self.patch_num, self.d_model)
         
-        # 5. Prediction: flatten encoder outputs and apply linear head to get forecasts
-        # Flatten all channels and patches: shape (B, C * patch_num * d_model)
-        x_flattened = x_enc_out.reshape(B, C * self.patch_num * self.d_model)
-        pred = self.head_linear(x_flattened)  # shape (B, num_targets * H)
+        # 5) Prediction head
+        x_flattened = x_enc_out.reshape(B_, C * self.patch_num * self.d_model)
+        pred = self.head_linear(x_flattened)  # (B, H * num_targets)
 
-        # # Reshape to (B, num_targets, H)
-        # if self.num_targets > 1:
-        #     pred = pred.view(B, self.num_targets, self.output_horizon)
-        # else:
-        #     pred = pred.view(B, 1, self.output_horizon)
-        # return pred
-
-        # Reshape to (B, H, C)
-        if self.num_targets > 1:
-            pred = pred.view(B, self.output_horizon, self.num_targets)
-        else:
-            pred = pred.view(B, self.output_horizon, 1)
+        # Return (B, H, num_targets)
+        pred = pred.view(B_, self.output_horizon, self.num_targets)
         return pred
-

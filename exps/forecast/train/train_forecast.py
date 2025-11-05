@@ -10,13 +10,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from joblib import dump
+
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from sklearn.preprocessing import StandardScaler
+
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+from utils.data_utils.datetime_utils import time_features
+from utils.data_utils.processing import TargetScaler, split_by_time, build_windows
+from utils.forecast.metrics import compute_metrics, per_horizon_metrics
 
 # ------------------ Utils ------------------
-
 def set_seed(seed: int = 42):
     random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
     if torch.cuda.is_available(): torch.cuda.manual_seed_all(seed)
@@ -25,37 +31,14 @@ def ensure_dir(p: str):
     os.makedirs(p, exist_ok=True)
     return p
 
-def time_features(df: pd.DataFrame, time_col="time") -> pd.DataFrame:
-    """Add cyclical datetime features. Assumes time is parseable to pandas datetime."""
-    if not np.issubdtype(df[time_col].dtype, np.datetime64):
-        df[time_col] = pd.to_datetime(df[time_col])
-    dt = df[time_col].dt
-    df["hour"] = dt.hour
-    df["dow"]  = dt.dayofweek
-    df["doy"]  = dt.dayofyear
-    df["month"]= dt.month
-
-    # cyclical encodings
-    df["hour_sin"] = np.sin(2*np.pi*df["hour"]/24.0)
-    df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24.0)
-    df["dow_sin"]  = np.sin(2*np.pi*df["dow"]/7.0)
-    df["dow_cos"]  = np.cos(2*np.pi*df["dow"]/7.0)
-    df["month_sin"]= np.sin(2*np.pi*df["month"]/12.0)
-    df["month_cos"]= np.cos(2*np.pi*df["month"]/12.0)
-    return df
-
-def compute_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
-    eps = 1e-8
-    mae = float(np.mean(np.abs(y_true - y_pred)))
-    mse = float(np.mean((y_true - y_pred)**2))
-    rmse = float(math.sqrt(mse))
-    mape = float(np.mean(np.abs((y_true - y_pred) / (y_true + eps))) * 100.0)
-    smape = float(np.mean(2*np.abs(y_pred - y_true) / (np.abs(y_true) + np.abs(y_pred) + eps)) * 100.0)
-    ybar = float(np.mean(y_true))
-    r2 = float(1.0 - (np.sum((y_true - y_pred)**2) / (np.sum((y_true - ybar)**2) + eps)))
-    peak = float(np.max(y_true) + eps)
-    mae_pct_peak = float(mae / peak * 100.0)
-    return dict(MAE=mae, MSE=mse, RMSE=rmse, MAPE=mape, sMAPE=smape, R2=r2, MAE_pct_peak=mae_pct_peak)
+def make_input_scaler(kind: str):
+    if kind == "standard":
+        return StandardScaler()
+    if kind == "minmax":
+        return MinMaxScaler()
+    if kind == "none":
+        return None
+    raise ValueError(f"Unknown scaler kind: {kind}")
 
 def plot_forecast(ts_time, y_true, y_pred, title, outpath):
     plt.figure()
@@ -81,41 +64,6 @@ class RollingWindowDataset(Dataset):
     def __len__(self): return self.X.shape[0]
     def __getitem__(self, idx):
         return self.X[idx], self.Y[idx]
-
-def build_windows(df: pd.DataFrame, input_cols: List[str], target_col: str,
-                  history: int, horizon: int) -> Tuple[np.ndarray, np.ndarray, List[pd.Timestamp]]:
-    """
-    Returns:
-      X: (N, L, D) built from 'input_cols'
-      Y: (N, H) from 'target_col'
-      T: list of timestamps aligned to the end of each Y window
-    """
-    # ensure target_col appears exactly once in the projection
-    all_cols = input_cols + ([target_col] if target_col not in input_cols else [])
-    values = df[all_cols].values
-    times = df["time"].values
-    L, H = history, horizon
-    D = len(input_cols)
-
-    X_list, Y_list, T_list = [], [], []
-    N = len(df)
-    # y_col index in values is either D (if we appended) or the index within input_cols (dedup guard)
-    y_col = all_cols.index(target_col)
-    for end in range(L, N - H + 1):
-        X_list.append(values[end-L:end, :D])                   # (L, D)
-        Y_list.append(values[end:end+H, y_col])                # (H,)
-        T_list.append(times[end+H-1])
-
-    X = np.stack(X_list, axis=0) if X_list else np.zeros((0, L, D))
-    Y = np.stack(Y_list, axis=0) if Y_list else np.zeros((0, H))
-    T = [pd.Timestamp(t) for t in T_list]
-    return X, Y, T
-
-def split_by_time(df: pd.DataFrame, train_ratio=0.7, val_ratio=0.15):
-    N = len(df)
-    i_tr = int(N * train_ratio)
-    i_va = int(N * (train_ratio + val_ratio))
-    return df.iloc[:i_tr], df.iloc[i_tr:i_va], df.iloc[i_va:]
 
 def parse_city_kv_list(items: List[str]) -> Dict[str, str]:
     out = {}
@@ -156,30 +104,22 @@ def prepare_city_frame(cfg: SeriesConfig, features: List[str], target_col="load"
         raise ValueError(f"{cfg.city}: missing columns {missing} in merged CSVs ({cfg.elec_path}, {cfg.meteo_path})")
 
     keep = ["time", target_col] + features + [
-        "hour_sin","hour_cos","dow_sin","dow_cos","month_sin","month_cos"
+        "hour_sin","hour_cos","dow_sin","dow_cos","month_sin","month_cos", "is_holiday"
     ]
     if include_past_load:
         df["load_past"] = df[target_col]
         keep.append("load_past")
-
     return df[keep].copy()
 
-# def standardize_train_val_test(train_df, val_df, test_df, cols: List[str]) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, StandardScaler]:
-#     scaler = StandardScaler()
-#     train_df[cols] = scaler.fit_transform(train_df[cols].to_numpy())
-#     val_df[cols]   = scaler.transform(val_df[cols].to_numpy())
-#     test_df[cols]  = scaler.transform(test_df[cols].to_numpy())
-#     return train_df, val_df, test_df, scaler
-
-
-def standardize_train_val_test(train_df, val_df, test_df, cols: List[str]):
-    # work on copies to avoid chained assignment warnings
-    train_df = train_df.copy()
-    val_df   = val_df.copy()
-    test_df  = test_df.copy()
-
-    scaler = StandardScaler()
-    train_df.loc[:, cols] = scaler.fit_transform(train_df[cols].to_numpy())
+def standardize_train_val_test(train_df, val_df, test_df, cols, scaler=None, scaler_kind="standard"):
+    train_df = train_df.copy(); val_df = val_df.copy(); test_df = test_df.copy()
+    if scaler_kind == "none":
+        # no scaling requested
+        return train_df, val_df, test_df, None
+    if scaler is None:
+        scaler = make_input_scaler(scaler_kind)
+        scaler = scaler.fit(train_df[cols].to_numpy())
+    train_df.loc[:, cols] = scaler.transform(train_df[cols].to_numpy())
     val_df.loc[:, cols]   = scaler.transform(val_df[cols].to_numpy())
     test_df.loc[:, cols]  = scaler.transform(test_df[cols].to_numpy())
     return train_df, val_df, test_df, scaler
@@ -222,7 +162,7 @@ def make_model(model_name: str, input_dim: int, horizon: int,
 
     elif name == "mamba":
         if model_module is None: model_module = "utils.forecast.mamba"
-        if model_class is None:  model_class = "UniVForecaster"
+        if model_class is None:  model_class = "MambaForecaster"
         mod = importlib.import_module(model_module)
         ModelClass = getattr(mod, model_class)
         return ModelClass(input_dim=input_dim, horizon=horizon, **model_kwargs)
@@ -232,18 +172,18 @@ def make_model(model_name: str, input_dim: int, horizon: int,
         if model_class is None:  model_class = "PatchTSTModel"
         mod = importlib.import_module(model_module)
         ModelClass = getattr(mod, model_class)
-        # Many PatchTST impls expect c_in and pred_len (plus others in kwargs)
-        return ModelClass(c_in=input_dim, pred_len=horizon, **model_kwargs)
+        return ModelClass(input_dim=input_dim, output_horizon=horizon, **model_kwargs)
 
     else:
         raise ValueError(f"Unknown model: {model_name}")
 
 # ------------------ Training ------------------
 
-def train_loop(model, loaders, device, epochs=20, lr=1e-3, ckpt_path=None):
+def train_loop(model, loaders, device, epochs=20, lr=1e-3, ckpt_path=None, patience=5, tol=1e-5):
     criterion = nn.MSELoss()
-    optim = torch.optim.Adam(model.parameters(), lr=lr)
+    optim = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     best_val = float("inf")
+    bad=0
     for ep in range(1, epochs+1):
         model.train()
         tr_loss = 0.0
@@ -278,10 +218,16 @@ def train_loop(model, loaders, device, epochs=20, lr=1e-3, ckpt_path=None):
                 f"val MSE={va_loss:.3f} (RMSE={va_loss**0.5:.3f})")
 
 
-        if va_loss < best_val and ckpt_path is not None:
+        if va_loss < best_val-tol and ckpt_path is not None:
             best_val = va_loss
             ensure_dir(os.path.dirname(ckpt_path))
             torch.save(model.state_dict(), ckpt_path)
+            bad=0
+        else:
+            bad+=1
+            if bad>=patience:
+                print(f"Early stopping at epoch {ep} (best val MSE={best_val:.6f}, best val RMSE={best_val**0.5:.3f})")
+                break
     return best_val
 
 def predict(model, loader, device) -> np.ndarray:
@@ -297,7 +243,6 @@ def predict(model, loader, device) -> np.ndarray:
     return np.concatenate(preds, axis=0) if preds else np.zeros((0,))
 
 # ------------------ Pipeline ------------------
-
 def run_mode(args):
     set_seed(args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
@@ -346,24 +291,56 @@ def run_mode(args):
 
     # Split each city by time; standardize only inputs
     input_cols = [c for c in per_city_frames[next(iter(per_city_frames))].columns if c not in ["time", args.target_col]]
+
     city_splits = {}
+    # for city, df in per_city_frames.items():
+    #     tr, va, te = split_by_time(df, train_ratio=args.train_ratio, val_ratio=args.val_ratio)
+    #     tr, va, te, scaler = standardize_train_val_test(tr, va, te, input_cols, scaler_kind=args.scaler_kind)
+    #     city_splits[city] = (tr, va, te, scaler)
     for city, df in per_city_frames.items():
         tr, va, te = split_by_time(df, train_ratio=args.train_ratio, val_ratio=args.val_ratio)
-        tr, va, te, scaler = standardize_train_val_test(tr, va, te, input_cols)
-        city_splits[city] = (tr, va, te, scaler)
+
+        # Input scaling (per-series)
+        tr, va, te, in_scaler = standardize_train_val_test(
+            tr, va, te, input_cols, scaler=None, scaler_kind=args.input_scaler
+        )
+
+        # Target scaling (optional, fit on TRAIN targets only)
+        tgt_scaler = None
+        if args.scale_target:
+            y_tr = tr[args.target_col].to_numpy()
+            tgt_scaler = TargetScaler(mean=float(y_tr.mean()), std=float(y_tr.std()))
+            # not write back scaled targets into df; scale Y arrays after windowing
+
+        city_splits[city] = (tr, va, te, in_scaler, tgt_scaler)
+
 
     # Build windows per city
     city_windows = {}
-    for city, (tr, va, te, scaler) in city_splits.items():
+    for city, (tr, va, te, in_scaler, tgt_scaler) in city_splits.items():
         Xtr, Ytr, Ttr = build_windows(tr, input_cols, args.target_col, args.history, args.horizon)
         Xva, Yva, Tva = build_windows(va, input_cols, args.target_col, args.history, args.horizon)
         Xte, Yte, Tte = build_windows(te, input_cols, args.target_col, args.history, args.horizon)
-        city_windows[city] = dict(Xtr=Xtr, Ytr=Ytr, Ttr=Ttr, Xva=Xva, Yva=Yva, Tva=Tva, Xte=Xte, Yte=Yte, Tte=Tte)
+
+        if args.scale_target and tgt_scaler is not None:
+            Ytr_s = tgt_scaler.transform(Ytr); Yva_s = tgt_scaler.transform(Yva); Yte_s = tgt_scaler.transform(Yte)
+        else:
+            Ytr_s, Yva_s, Yte_s = Ytr, Yva, Yte
+
+        city_windows[city] = dict(
+            Xtr=Xtr, Ytr=Ytr_s, Ttr=Ttr,
+            Xva=Xva, Yva=Yva_s, Tva=Tva,
+            Xte=Xte, Yte=Yte_s, Tte=Tte,
+            Yraw_tr=Ytr, Yraw_va=Yva, Yraw_te=Yte,  # keep raw for metrics/CSV when needed
+            tgt_scaler=tgt_scaler
+        )
+
 
     # Assemble loaders based on mode
     if args.mode == "per_city":
         if len(series_cfgs) != 1:
             raise ValueError("per_city mode expects exactly one city in the provided CSV args.")
+
         city = series_cfgs[0].city
         W = city_windows[city]
         loaders = make_loaders(W["Xtr"], W["Ytr"], W["Xva"], W["Yva"], W["Xte"], W["Yte"], args.batch_size)
@@ -375,8 +352,28 @@ def run_mode(args):
             state = torch.load(ckpt_path, map_location=device, weights_only=True)
             model.load_state_dict(state, strict=True)
 
-        yhat = predict(model, loaders["test"], device)  # (N,H)
-        ytrue = W["Yte"]                                # (N,H)
+        yhat = predict(model, loaders["test"], device)   # scaled-space or raw depending on args
+        W = city_windows[city]
+        if args.scale_target and W["tgt_scaler"] is not None:
+            yhat_raw = W["tgt_scaler"].inverse(yhat)
+            ytrue_raw = W["Yraw_te"]
+        else:
+            yhat_raw = yhat
+            ytrue_raw = W["Yte"]
+        # metrics on raw units:
+        metrics_H = per_horizon_metrics(ytrue_raw, yhat_raw)  # CSVs use yhat_raw / ytrue_raw
+
+        y_hat = yhat_raw
+        ytrue = ytrue_raw
+
+        with open(os.path.join(exp_dir, "metrics_per_horizon.json"), "w") as f:
+            json.dump({city: metrics_H}, f, indent=2)
+            # (N,H) -> long form for CSV
+        dfH = (pd.DataFrame(yhat, columns=[f"pred_h{h+1}" for h in range(yhat.shape[1])])
+            .assign(time=W["Tte"], city=city))
+        dfH_true = (pd.DataFrame(ytrue, columns=[f"true_h{h+1}" for h in range(ytrue.shape[1])]))
+        dfH = pd.concat([dfH[["time","city"]], dfH_true, dfH.filter(like="pred_")], axis=1)
+        dfH.to_csv(os.path.join(exp_dir, "preds_test_full_horizon.csv"), index=False)
 
         yhat_last = yhat[:, -1]; ytrue_last = ytrue[:, -1]
         metrics = compute_metrics(ytrue_last, yhat_last)
@@ -390,6 +387,43 @@ def run_mode(args):
         plot_forecast(W["Tte"], ytrue_last, yhat_last, f"{city} - Test (last-step)", os.path.join(exp_dir, "figures", f"{city}_test_last.png"))
 
     elif args.mode == "multi_city":
+        input_cols = [c for c in per_city_frames[next(iter(per_city_frames))].columns if c not in ["time", args.target_col]]
+
+        # 1) split (no scaling yet)
+        split_map = {}
+        for city, df in per_city_frames.items():
+            tr, va, te = split_by_time(df, train_ratio=args.train_ratio, val_ratio=args.val_ratio)
+            split_map[city] = (tr.copy(), va.copy(), te.copy())
+
+        # 2) build the scaler
+        global_in_scaler = None
+        if args.global_scaler and args.input_scaler != "none":
+            input_scaler = make_input_scaler(args.input_scaler)
+            concat_train = pd.concat([split_map[c][0][input_cols] for c in split_map], axis=0)
+            global_in_scaler = input_scaler.fit(concat_train.to_numpy())
+
+        # 3) apply scaling (global or per-series)
+        city_splits = {}
+        for city, (tr, va, te) in split_map.items():
+            if global_in_scaler is not None:
+                tr_s, va_s, te_s, in_scaler = standardize_train_val_test(
+                    tr, va, te, input_cols, scaler=global_in_scaler, scaler_kind=args.input_scaler
+                )
+            else:
+                tr_s, va_s, te_s, in_scaler = standardize_train_val_test(
+                    tr, va, te, input_cols, scaler=None, scaler_kind=args.input_scaler
+                )
+
+            # Target scaling per city (optional)
+            tgt_scaler = None
+            if args.scale_target:
+                y_tr = tr_s[args.target_col].to_numpy()  # NOTE: target was not scaled; safe
+                tgt_scaler = TargetScaler(mean=float(y_tr.mean()), std=float(y_tr.std()))
+
+            city_splits[city] = (tr_s, va_s, te_s, in_scaler, tgt_scaler)
+
+
+
         Xtr = np.concatenate([city_windows[c]["Xtr"] for c in city_windows], axis=0)
         Ytr = np.concatenate([city_windows[c]["Ytr"] for c in city_windows], axis=0)
         Xva = np.concatenate([city_windows[c]["Xva"] for c in city_windows], axis=0)
@@ -397,8 +431,7 @@ def run_mode(args):
         Xte = np.concatenate([city_windows[c]["Xte"] for c in city_windows], axis=0)
         Yte = np.concatenate([city_windows[c]["Yte"] for c in city_windows], axis=0)
 
-        loaders = make_loaders(Xtr, Ytr, Xva, Yva, Xte, Yte, args.batch_size)
-        input_dim = Xtr.shape[-1]
+
         model = make_model(args.model, input_dim, args.horizon, args.model_class, args.model_module, args.model_kwargs).to(device)
         _ = train_loop(model, loaders, device, epochs=args.epochs, lr=args.lr, ckpt_path=ckpt_path)
         if os.path.exists(ckpt_path):
@@ -413,6 +446,18 @@ def run_mode(args):
             test_loader = make_loaders(W["Xtr"], W["Ytr"], W["Xva"], W["Yva"], W["Xte"], W["Yte"], args.batch_size)["test"]
             yhat = predict(model, test_loader, device)
             ytrue = W["Yte"]
+
+            metrics_H = per_horizon_metrics(ytrue, yhat)
+            with open(os.path.join(exp_dir, "metrics_per_horizon.json"), "w") as f:
+                json.dump({city: metrics_H}, f, indent=2)
+            # (N,H) -> long form for CSV
+            dfH = (pd.DataFrame(yhat, columns=[f"pred_h{h+1}" for h in range(yhat.shape[1])])
+                .assign(time=W["Tte"], city=city))
+            dfH_true = (pd.DataFrame(ytrue, columns=[f"true_h{h+1}" for h in range(ytrue.shape[1])]))
+            dfH = pd.concat([dfH[["time","city"]], dfH_true, dfH.filter(like="pred_")], axis=1)
+            dfH.to_csv(os.path.join(exp_dir, "preds_test_full_horizon.csv"), index=False)
+
+
             yhat_last, ytrue_last = yhat[:, -1], ytrue[:, -1]
             met = compute_metrics(ytrue_last, yhat_last)
             per_city_metrics[city] = met
@@ -439,8 +484,31 @@ def run_mode(args):
             state = torch.load(ckpt_path, map_location=device, weights_only=True)
             model.load_state_dict(state, strict=True)
 
-        yhat = predict(model, loaders["test"], device)
-        ytrue = W["Yte"]
+        yhat = predict(model, loaders["test"], device)   # scaled-space or raw depending on args
+        W = city_windows[city]
+        if args.scale_target and W["tgt_scaler"] is not None:
+            yhat_raw = W["tgt_scaler"].inverse(yhat)
+            ytrue_raw = W["Yraw_te"]
+        else:
+            yhat_raw = yhat
+            ytrue_raw = W["Yte"]
+
+        # metrics on raw units:
+        metrics_H = per_horizon_metrics(ytrue_raw, yhat_raw)
+        # CSVs use yhat_raw / ytrue_raw
+
+        y_hat = yhat_raw
+        ytrue = ytrue_raw
+
+        with open(os.path.join(exp_dir, "metrics_per_horizon.json"), "w") as f:
+            json.dump({city: metrics_H}, f, indent=2)
+        # (N,H) -> long form for CSV
+        dfH = (pd.DataFrame(yhat, columns=[f"pred_h{h+1}" for h in range(yhat.shape[1])])
+            .assign(time=W["Tte"], city=city))
+        dfH_true = (pd.DataFrame(ytrue, columns=[f"true_h{h+1}" for h in range(ytrue.shape[1])]))
+        dfH = pd.concat([dfH[["time","city"]], dfH_true, dfH.filter(like="pred_")], axis=1)
+        dfH.to_csv(os.path.join(exp_dir, "preds_test_full_horizon.csv"), index=False)
+
         yhat_last, ytrue_last = yhat[:, -1], ytrue[:, -1]
         metrics = compute_metrics(ytrue_last, yhat_last)
         with open(os.path.join(exp_dir, "metrics.json"), "w") as f:
@@ -494,11 +562,21 @@ if __name__ == "__main__":
     p.add_argument("--horizon", type=int, default=24, help="forecast horizon (hours)")
     p.add_argument("--train-ratio", type=float, default=0.7)
     p.add_argument("--val-ratio", type=float, default=0.15)
-    p.add_argument("--batch-size", type=int, default=128)
-    p.add_argument("--epochs", type=int, default=20)
-    p.add_argument("--lr", type=float, default=1e-3)
+    p.add_argument("--batch-size", type=int, default=32)
+    p.add_argument("--epochs", type=int, default=200)
+    p.add_argument("--lr", type=float, default=1e-4)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--cpu", action="store_true")
+
+    p.add_argument("--input-scaler", choices=["standard","minmax","none"], default="standard",
+               help="How to scale input features (fitted on TRAIN, applied to VAL/TEST).")
+    p.add_argument("--scale-target", action="store_true",
+                help="If set, scale target on TRAIN and invert predictions before metrics/CSV.")
+    p.add_argument("--global-scaler", action="store_true",
+                help="If set in multi_city, fit ONE scaler on the concatenated TRAIN slices of all cities.")
+    p.add_argument("--save-scalers", action="store_true",
+                help="Persist fitted scalers (and target stats) to exp_dir for reproducibility.")
+
 
     p.add_argument("--model", choices=["gru","lstm","tcn","mamba","patchtst"], default="gru",
                    help="Backbone to use.")
@@ -507,7 +585,7 @@ if __name__ == "__main__":
     p.add_argument("--model-class", type=str, default=None,
                    help="Class name in the module, e.g. PatchTSTModel")
     p.add_argument("--model-kwarg", action="append", default=[],
-                   help="Repeatable: pass key=value args to the model (e.g., d_model=128 embed=timeF hidden_dim=256)")
+                   help="Repeatable: pass key=value args to the model (e.g., num_layers=2 hidden_size=256)")
 
     p.add_argument("--save-dir", type=str, default="outputs/forecast/train_runs")
     p.add_argument("--exp-name", type=str, default="debug")
