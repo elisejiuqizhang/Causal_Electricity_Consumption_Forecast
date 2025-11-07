@@ -7,6 +7,7 @@ dict_regions ={
     "London": ["London"],
     "Kingston": ["Kingston"],
     "Ottawa": ["Ottawa"],
+    "Oshawa": ["Oshawa"]
 }
 
 list_cities = [city for region in dict_regions.values() for city in region]

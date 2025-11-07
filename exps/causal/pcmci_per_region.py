@@ -27,12 +27,13 @@ DATA_FILE_PREFIX='combined_ieso_era5_avg_'
 SCALING='standard'  # 'minmax' or 'standard' or None
 
 # PCMCI parameters
-list_time_lags = range(1, 11)  # hourly lags (the tau_max for pcmci)
+list_time_lags = range(1, 9)  # hourly lags (the tau_max for pcmci)
 pc_alpha=0.05
 list_plot_thres = np.arange(0.025, 0.5, 0.025)
 
 # load data
 for region in dict_regions.keys():
+
     print(f'Processing region: {region}')
     save_dir_region = os.path.join(OUTPUT_DIR, region)
     os.makedirs(save_dir_region, exist_ok=True)
@@ -47,7 +48,10 @@ for region in dict_regions.keys():
             data_file = os.path.join(DATA_DIR, f'{DATA_FILE_PREFIX}{city.replace(" ", "_").lower()}.csv')
             city_df = pd.read_csv(data_file, parse_dates=['time'])
             city_df = city_df[['time'] + list_vars]
+            city_df.set_index('time', inplace=True)
 
+            list_dfs_region.append(city_df.copy()) # get the original dataframe
+            
             # scale by column if needed
             if SCALING is not None:
                 for var in list_vars:
@@ -59,12 +63,12 @@ for region in dict_regions.keys():
                         raise ValueError(f'Unknown scaling method: {SCALING}')
                     city_df[var] = scaler.fit_transform(city_df[[var]])
 
-            list_dfs_region.append(city_df)
+            
 
             # process for the city
             for lag in list_time_lags:
                 print(f'Processing lag: {lag}')
-                pcmci=create_pcmci(city_df.drop(columns=['time']), var_names=list_vars, time_lag_max=lag, robust=True, wls=False)
+                pcmci=create_pcmci(city_df, var_names=list_vars, time_lag_max=lag, robust=True, wls=False)
                 with open(os.path.join(save_dir_city, f"pcmci_maxLag{lag}_results.txt"), "w") as f:
                     with contextlib.redirect_stdout(f):
                         results=pcmci.run_pcmci(pc_alpha=pc_alpha)
@@ -107,29 +111,29 @@ for region in dict_regions.keys():
                     plt.savefig(os.path.join(save_dir_city, f'pcmci_maxLag{lag}_alpha{pc_alpha}_thres{plot_thres:.3f}_graph.png'))
                     plt.close()
 
-        # process for the aggregated region - add up 
-        df_region = pd.concat(list_dfs_region).groupby('time').sum().reset_index()
+        # process for the aggregated region - for total electricity consumption, sum up; for other meteorological variables, take average
+        df_region = pd.concat(list_dfs_region).groupby('time').agg({var: 'mean' if var in list_era5_vars else 'sum' for var in list_vars}).reset_index()
     else:
         df_region = pd.read_csv(os.path.join(DATA_DIR, f'{DATA_FILE_PREFIX}{region.replace(" ", "_").lower()}.csv'), parse_dates=['time'])
         df_region = df_region[['time'] + list_vars]
-        # scale by column if needed
-        if SCALING is not None:
-            for var in list_vars:
-                if SCALING=='minmax':
-                    scaler = MinMaxScaler()
-                elif SCALING=='standard':
-                    scaler = StandardScaler()
-                else:
-                    raise ValueError(f'Unknown scaling method: {SCALING}')
-                df_region[var] = scaler.fit_transform(df_region[[var]])
+        df_region.set_index('time', inplace=True)
+
+    # scale by column if needed
+    if SCALING is not None:
+        for var in list_vars:
+            if SCALING=='minmax':
+                scaler = MinMaxScaler()
+            elif SCALING=='standard':
+                scaler = StandardScaler()
+            else:
+                raise ValueError(f'Unknown scaling method: {SCALING}')
+            df_region[var] = scaler.fit_transform(df_region[[var]])
 
     for lag in list_time_lags:
         print(f'Processing lag: {lag}')
-        pcmci=create_pcmci(df_region.drop(columns=['time']), var_names=list_vars, robust=True, wls=False)
+        pcmci=create_pcmci(df_region, var_names=list_vars, robust=True, wls=False)
         with open(os.path.join(save_dir_region, f"pcmci_maxLag{lag}_results.txt"), "w") as f:
             with contextlib.redirect_stdout(f):
-                # if lag==1: results=pcmci.run_pcmci(pc_alpha=pc_alpha)
-                # else: results=pcmci.run_lpcmci(tau_max=lag, pc_alpha=pc_alpha)
                 results=pcmci.run_pcmci(pc_alpha=pc_alpha, tau_max=lag)
         # save the results
         with open(os.path.join(save_dir_region, f"pcmci_maxLag{lag}_pValues.npy"), "wb") as f:

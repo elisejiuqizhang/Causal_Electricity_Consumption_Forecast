@@ -37,9 +37,9 @@ OUTPUT_DIR = os.path.join(OUTPUT_DIR, f'{NAME_VAR}', '_'.join(list_regions))
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # PCMCI parameters
-list_time_lags = range(6, 7)  # hourly lags (the tau_max for pcmci)
+list_time_lags = range(1, 7)  # hourly lags (the tau_max for pcmci)
 pc_alpha=0.05
-list_plot_thres = np.arange(0.025, 0.5, 0.025)
+list_plot_thres = np.arange(0.025, 0.9, 0.025)
 
 # load data
 list_dfs = []
