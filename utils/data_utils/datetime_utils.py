@@ -32,9 +32,11 @@ def time_features(
     df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24.0)
     df["dow_sin"]  = np.sin(2*np.pi*df["dow"]/7.0)
     df["dow_cos"]  = np.cos(2*np.pi*df["dow"]/7.0)
+    df["doy_sin"] = np.sin(2*np.pi*df["doy"]/365.0)
+    df["doy_cos"] = np.cos(2*np.pi*df["doy"]/365.0)
     df["month_sin"]= np.sin(2*np.pi*df["month"]/12.0)
     df["month_cos"]= np.cos(2*np.pi*df["month"]/12.0)
-
+    
     # is_holiday (Ontario and Canada federal holidays)
     if holidays_info is not None:
         if callable(holidays_info):
