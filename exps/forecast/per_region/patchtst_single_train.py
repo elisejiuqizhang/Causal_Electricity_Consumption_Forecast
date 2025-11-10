@@ -68,11 +68,11 @@ parser.add_argument("--aggregation_mode", type=str, choices=["mean", "first"], d
 
 # Training parameters
 parser.add_argument("--batch_size", type=int, default=64, help="Training batch size")
-parser.add_argument("--epochs", type=int, default=2, help="Number of training epochs")
+parser.add_argument("--epochs", type=int, default=500, help="Number of training epochs")
 parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
 parser.add_argument("--val_ratio", type=float, default=0.07, help="Fraction of data for validation")
 parser.add_argument("--early_stopping_eps", type=float, default=1e-4, help="Minimum validation loss improvement for reset patience")
-parser.add_argument("--early_stopping_patience", type=int, default=70, help="Epochs to wait without improvement before stopping")
+parser.add_argument("--early_stopping_patience", type=int, default=50, help="Epochs to wait without improvement before stopping")
 parser.add_argument("--val_warmup", type=int, default=5, help="Epoch to start validation loss tracking for early stopping")
 
 # PatchTST model hyperparameters
