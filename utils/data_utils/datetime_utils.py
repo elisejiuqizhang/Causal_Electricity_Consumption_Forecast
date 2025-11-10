@@ -49,7 +49,6 @@ def time_features(
             df["is_holiday"] = df[time_col].dt.date.isin(holi_set).astype(int)
     else:
         ca_on_holidays = holidays.country_holidays('CA', subdiv='ON') 
-        # df["is_holiday"] = df[time_col].dt.date.isin(ca_on_holidays).astype(int)
         df["is_holiday"] = df[time_col].dt.date.map(lambda d: int(d in ca_on_holidays))
 
     if drop_original:

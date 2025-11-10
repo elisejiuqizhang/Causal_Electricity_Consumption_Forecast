@@ -47,7 +47,7 @@ parser = argparse.ArgumentParser(description='PatchTST per-region single trainin
 # random seed
 parser.add_argument('--seed', type=int, default=597, help='random seed')
 # city/region name
-parser.add_argument('--region', type=str, default='Toronto', help='name of the region to run experiment on', choices=list(dict_regions.keys())+list_cities)
+parser.add_argument('--region', type=str, default='Peel', help='name of the region to run experiment on', choices=list(dict_regions.keys())+list_cities)
 # weather features to use (type of experiments: F0-only ieso electricity, F1-all meteo+ieso electricity, F2-non-causally selected meteo+ieso electricity, F3-causally selected meteo+ieso electricity)
 parser.add_argument('--feature_set', type=str, default='F3', help='feature set to use', choices=['F0', 'F1', 'F2', 'F3'])
 # data directory
@@ -68,7 +68,7 @@ parser.add_argument("--aggregation_mode", type=str, choices=["mean", "first"], d
 
 # Training parameters
 parser.add_argument("--batch_size", type=int, default=64, help="Training batch size")
-parser.add_argument("--epochs", type=int, default=500, help="Number of training epochs")
+parser.add_argument("--epochs", type=int, default=600, help="Number of training epochs")
 parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
 parser.add_argument("--val_ratio", type=float, default=0.07, help="Fraction of data for validation")
 parser.add_argument("--early_stopping_eps", type=float, default=1e-4, help="Minimum validation loss improvement for reset patience")
@@ -168,6 +168,10 @@ if region in dict_regions:
         df_region = pd.concat(list_agg_dfs, axis=1)
         # df_region.groupby(lambda x: '_'.join(x.split('_')[2:]), axis=1)
 
+        # rename - drop the {region}_ prefix to simplify
+        df_region = df_region.rename(columns={col: '_'.join(col.split('_')[1:]) for col in df_region.columns})  
+
+
 
     else: # only one city in the region
         data_file = os.path.join(DATA_DIR, f'{DATA_FILE_PREFIX}{dict_regions[region][0].replace(" ", "_").lower()}.csv')
@@ -175,9 +179,8 @@ if region in dict_regions:
         df_region = df_region[['time'] + list_vars]
         df_region.set_index('time', inplace=True)
         # df_region = df_region.rename(columns={var: f'{region}_{var}' for var in list_vars})
-
 else: 
-    if region in list_cities: # single city
+    if region in list_cities: # single city within a region
         print(f'  Loading city: {region}')
         data_file = os.path.join(DATA_DIR, f'{DATA_FILE_PREFIX}{region.replace(" ", "_").lower()}.csv')
         city_df = pd.read_csv(data_file, parse_dates=['time'])
@@ -404,6 +407,11 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
     fold_val_losses.append(val_losses)
     fold_epoch_times.append(epoch_times)
     print(f'  Fold {fold} training completed. Average epoch time: {np.mean(epoch_times):.2f} seconds.')
+    # save avg epoch time
+    with open(os.path.join(OUTPUT_DIR_FOLD, 'epoch_times.txt'), 'w') as f:
+        for epoch_idx, epoch_time in enumerate(epoch_times):
+            f.write(f'Epoch {epoch_idx}: {epoch_time:.4f} seconds\n')
+        f.write(f'Average epoch time: {np.mean(epoch_times):.4f} seconds\n')
 
     # now evaluate on test set using the best model
     model.load_state_dict(torch.load(os.path.join(OUTPUT_DIR_FOLD, model_file), map_location=device))
@@ -488,4 +496,11 @@ with open(os.path.join(OUTPUT_DIR, 'overall_results.txt'), 'w') as f:
     avg_mae = np.mean(fold_test_maes)
     avg_rmse = np.mean(fold_test_rmses)
     f.write(f'Average\t{avg_mae:.4f}\t{avg_rmse:.4f}\n')
+
+    f.write('\nAverage epoch times per fold:\n')
+    for fold in range(n_folds):
+        avg_epoch_time = np.mean(fold_epoch_times[fold])
+        f.write(f'{fold}\t{avg_epoch_time:.4f} seconds\n')
+    overall_avg_epoch_time = np.mean([np.mean(times) for times in fold_epoch_times])
+    f.write(f'Average\t{overall_avg_epoch_time:.4f} seconds\n')
 print(f'Experiment completed. Overall results saved to {os.path.join(OUTPUT_DIR, "overall_results.txt")}')
