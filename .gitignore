@@ -1,7 +1,8 @@
 outputs/
 .vscode/
 exps_vieux/
-job_scripts=
+job_scripts/
+1110job_scripts/
 job_scripts_vieux/
 exps/scratch/
 utils/forecast_vieux/
