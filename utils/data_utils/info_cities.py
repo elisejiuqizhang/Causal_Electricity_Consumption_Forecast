@@ -19,6 +19,19 @@ list_vars=["t2m_degC", "d2m_degC", "tp_mm", "tcw", "tcc", "skt", "avg_snlwrf", "
 list_era5_vars=["t2m_degC", "d2m_degC", "tp_mm", "tcw", "tcc", "skt", "avg_snlwrf", "avg_snswrf"]
 list_ieso_vars=["TOTAL_CONSUMPTION", "PREMISE_COUNT", "AVG_CONSUMPTION_PER_PREMISE"]
 
+# for multi-city forecasts
+list_multi1=['Toronto', 'Peel']
+list_multi2=list_multi1+['Oshawa']
+list_multi3=list_multi1+['Kitchener', 'Hamilton']
+
+list_multi4=['Kitchener', 'Hamilton']
+list_multi5=list_multi4+['Brampton']
+list_multi6=list_multi5+['London']
+
+list_multi6=['Ottawa', 'Kingston']
+list_multi7=list_multi6+list_multi1
+
+
 # list_cities = [
 #     "Toronto",
 #     "Mississauga",

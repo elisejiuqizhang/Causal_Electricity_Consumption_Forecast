@@ -49,7 +49,7 @@ parser.add_argument('--seed', type=int, default=597, help='random seed')
 # city/region name
 parser.add_argument('--region', type=str, default='Peel', help='name of the region to run experiment on', choices=list(dict_regions.keys())+list_cities)
 # weather features to use (type of experiments: F0-only ieso electricity, F1-all meteo+ieso electricity, F2-non-causally selected meteo+ieso electricity, F3-causally selected meteo+ieso electricity)
-parser.add_argument('--feature_set', type=str, default='F3', help='feature set to use', choices=['F0', 'F1', 'F2', 'F3'])
+parser.add_argument('--feature_set', type=str, default='F2', help='feature set to use', choices=['F0', 'F1', 'F2', 'F3'])
 # data directory
 parser.add_argument('--data_dir', type=str, default=os.path.join(ROOT_DIR, 'data', 'ieso_era5'), help='data directory path')
 parser.add_argument('--data_file_prefix', type=str, default='combined_ieso_era5_avg_', help='data file prefix')
@@ -58,7 +58,7 @@ parser.add_argument('--data_file_prefix', type=str, default='combined_ieso_era5_
 parser.add_argument('--scaler', type=str, default='standard', choices=['minmax', 'standard', 'none'], help='scaling method')
 
 # forecast parameters
-parser.add_argument("--n_folds", type=int, default=6, help="Number of folds/window splits for time series cross validation")
+parser.add_argument("--n_folds", type=int, default=3, help="Number of folds/window splits for time series cross validation")
 parser.add_argument("--window_size", type=int, default=24*2*366, help="Window size for each fold (in hours) - will be the total train+test of this fold")
 parser.add_argument("--train_ratio", type=float, default=0.93, help="Training (train+val) set ratio per fold")
 parser.add_argument("--input_length", type=int, default=168, help="Input sequence length L (e.g., 168 for 1 week)")
@@ -68,11 +68,11 @@ parser.add_argument("--aggregation_mode", type=str, choices=["mean", "first"], d
 
 # Training parameters
 parser.add_argument("--batch_size", type=int, default=64, help="Training batch size")
-parser.add_argument("--epochs", type=int, default=600, help="Number of training epochs")
+parser.add_argument("--epochs", type=int, default=500, help="Number of training epochs")
 parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
 parser.add_argument("--val_ratio", type=float, default=0.07, help="Fraction of data for validation")
 parser.add_argument("--early_stopping_eps", type=float, default=1e-4, help="Minimum validation loss improvement for reset patience")
-parser.add_argument("--early_stopping_patience", type=int, default=50, help="Epochs to wait without improvement before stopping")
+parser.add_argument("--early_stopping_patience", type=int, default=20, help="Epochs to wait without improvement before stopping")
 parser.add_argument("--val_warmup", type=int, default=5, help="Epoch to start validation loss tracking for early stopping")
 
 # PatchTST model hyperparameters
@@ -240,8 +240,14 @@ else:
 # to track: the losses of each fold, the average per epoch training time per fold
 fold_train_losses = []
 fold_val_losses = []
+
 fold_test_maes = []
 fold_test_rmses = []
+fold_test_mapes = []
+fold_test_smapes = []
+fold_test_mases=[]
+
+
 fold_epoch_times = []
 
 
@@ -295,7 +301,7 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
     print(f'  Training sequences shape: X: {X_arr.shape}, Y: {Y_arr.shape}')
 
 
-    # prepare a fixed evaluation snapshot for periodic  - get truth unnormalized values
+    # prepare a fixed evaluation snapshot - get truth unnormalized values
     eval_snap_df = val_df_fold.copy()
     truth_eval_snap = eval_snap_df['TOTAL_CONSUMPTION'].values
         
@@ -321,7 +327,7 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
     best_val_loss = float('inf')
     trigger_times = 0
     global_step = 0
-    model_file = "best_patchtst_total.pth"
+    model_file = "best_model.pth"
 
     train_losses = []
     val_losses = []
@@ -377,6 +383,7 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
                 print(f'    No improvement in validation loss for {trigger_times} epochs')
                 if trigger_times >= early_stopping_patience:
                     print(f'    Early stopping at epoch {epoch}')
+                    break
                     
 
         # tensorboard logging
@@ -417,6 +424,7 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
     model.load_state_dict(torch.load(os.path.join(OUTPUT_DIR_FOLD, model_file), map_location=device))
     model.eval()
     # construct test sequences
+    test_df_fold_original = test_df_fold.copy()
     test_df_fold = test_df_fold.astype('float32')
     if scaler.lower()!='none' and scaler is not None:
         test_df_fold.loc[:, :] = scaler_all.transform(test_df_fold.values)
@@ -460,22 +468,34 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
     else:
         agg_pred = agg_pred_norm
     # align with true values
-    aligned_dt=test_df_fold.index[pred_indices]
-    true_aligned=test_df_fold['TOTAL_CONSUMPTION'].values[pred_indices]
+    aligned_dt=test_df_fold_original.index[pred_indices]
+    true_aligned=test_df_fold_original['TOTAL_CONSUMPTION'].values[pred_indices]
+
 
     # save predictions to csv
     results_df = pd.DataFrame({"datetime": aligned_dt, "predicted_load": agg_pred, "true_load": true_aligned})
     results_df.to_csv(os.path.join(OUTPUT_DIR_FOLD, 'test_predictions.csv'), index=False)
 
-    # compute overall MAE, MSE, RMSE on evaluation period
+    # compute overall MAE, MSE, mape, smape, mase on evaluation period
     if np.isfinite(true_aligned).all():
         diff = agg_pred - true_aligned
         mae = float(np.mean(np.abs(diff)))
         mse = float(np.mean(diff**2))
         rmse = float(np.sqrt(mse))
-        print(f"MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}")
+        mape = float(np.mean( np.abs(diff) / (np.abs(true_aligned) + 1e-8) )) * 100.0
+        smape = float(np.mean( 2.0 * np.abs(diff) / (np.abs(agg_pred) + np.abs(true_aligned) + 1e-8) )) * 100.0
+        # MASE
+        naive_forecast = test_df_fold['TOTAL_CONSUMPTION'].values[input_length - horizon : n_test - horizon]
+        mase_denominator = np.mean(np.abs(true_aligned - naive_forecast))
+        mase = float(mae / (mase_denominator + 1e-8))
+        print(f"  Test set results - MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}, MAPE: {mape:.4f}%, SMAPE: {smape:.4f}%, MASE: {mase:.4f}")
+
         fold_test_maes.append(mae)
         fold_test_rmses.append(rmse)
+        fold_test_mapes.append(mape)
+        fold_test_smapes.append(smape)
+        fold_test_mases.append(mase)
+
         # Plot the rolling forecast vs truth
         plt.figure(figsize=(12,6))
         plt.plot(aligned_dt, true_aligned, label="True Load", linestyle="--")
@@ -497,6 +517,14 @@ with open(os.path.join(OUTPUT_DIR, 'overall_results.txt'), 'w') as f:
     avg_rmse = np.mean(fold_test_rmses)
     f.write(f'Average\t{avg_mae:.4f}\t{avg_rmse:.4f}\n')
 
+    f.write(f'Fold\tTest_MAPE\tTest_SMAPE\tTest_MASE\n')
+    for fold in range(n_folds):
+        f.write(f'{fold}\t{fold_test_mapes[fold]:.4f}\t{fold_test_smapes[fold]:.4f}\t{fold_test_mases[fold]:.4f}\n')
+    avg_mape = np.mean(fold_test_mapes)
+    avg_smape = np.mean(fold_test_smapes)
+    avg_mase = np.mean(fold_test_mases)
+    f.write(f'Average\t{avg_mape:.4f}\t{avg_smape:.4f}\t{avg_mase:.4f}\n')
+    
     f.write('\nAverage epoch times per fold:\n')
     for fold in range(n_folds):
         avg_epoch_time = np.mean(fold_epoch_times[fold])

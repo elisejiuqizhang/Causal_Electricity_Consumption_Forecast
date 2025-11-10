@@ -36,18 +36,54 @@ def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target
         Y[i] = data[start_y:end_y, df.columns.get_loc(target_col)]
 
     return X, Y
+
+def construct_sequences_multi_output(df, history_len, horizon, step_size=1, target_cols=['TOTAL_CONSUMPTION']):
+    """
+    Construct input-output sequences for time series forecasting - multivariate output.
+
+    Parameters:
+    - df: pd.DataFrame, input time series data with datetime index
+    - history_len: int, number of past time steps to use as input
+    - horizon: int, number of future time steps to predict
+    - step_size: int, step size between sequences
+    - target_cols: list of str, columns to predict
+
+    Returns:
+    - X: np.ndarray, input sequences of shape (num_samples, num_features, history_len)
+    - Y: np.ndarray, output sequences of shape (num_samples, len(target_cols), horizon)
+    """
+    data = df.values
+    num_samples = (len(df) - history_len - horizon) // step_size + 1
+    num_features = data.shape[1]
+    num_targets = len(target_cols)
+
+    X = np.zeros((num_samples, num_features, history_len))
+    Y = np.zeros((num_samples, num_targets, horizon))
+
+    for i in range(num_samples):
+        start_x = i * step_size
+        end_x = start_x + history_len
+        start_y = end_x
+        end_y = start_y + horizon
+
+        X[i] = data[start_x:end_x].T  # Transpose to get shape (num_features, history_len)
+        for j, col in enumerate(target_cols):
+            Y[i, j] = data[start_y:end_y, df.columns.get_loc(col)]
+
+    return X, Y
     
 # Helper: preview plot on the eval snapshots
-def preview_total_plot(model, eval_loader, timestamps, truth_raw, N_eval, L, H, stride, agg_mode, load_mean, load_std, save_dir, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"), writer=None, step=None):
+def preview_total_plot(model, eval_loader, timestamps, truth_raw, N_eval, L, H, stride, agg_mode, load_mean, load_std, save_dir, device=torch.device("cuda" if torch.cuda.is_available() else "cpu"), writer=None, step=None, target_channel: int = 0):
     model.eval()
     preds = []
     with torch.no_grad():
         for xb, _ in eval_loader:
             xb = xb.to(device)
             out = model(xb).cpu().numpy()
-            # Ensure shape (B, H) for each batch
-            if out.ndim == 3:   # (B, 1, H)
-                out = out[:, 0, :]
+            # Ensure shape (B, H) for each batch. For multi-target outputs, select target_channel
+            if out.ndim == 3:   # (B, C, H)
+                # select requested target channel
+                out = out[:, target_channel, :]
             elif out.ndim == 1: # (H,) -> (1, H)
                 out = out[None, :]
             preds.append(out)
