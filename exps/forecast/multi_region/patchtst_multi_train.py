@@ -63,7 +63,7 @@ parser.add_argument("--aggregation_mode", type=str, choices=["mean", "first"], d
 
 # Training parameters
 parser.add_argument("--batch_size", type=int, default=64, help="Training batch size")
-parser.add_argument("--epochs", type=int, default=500, help="Number of training epochs")
+parser.add_argument("--epochs", type=int, default=30, help="Number of training epochs")
 parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
 parser.add_argument("--val_ratio", type=float, default=0.07, help="Fraction of data for validation")
 parser.add_argument("--early_stopping_eps", type=float, default=1e-4, help="Minimum validation loss improvement for reset patience")
@@ -326,6 +326,11 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
 
     # prepare fixed evaluation snapshot - get truth unnormalized values
     eval_snap_df = val_df_fold.copy()
+    
+    # Store unnormalized truth BEFORE scaling
+    truth_eval_snap_unnorm = {}
+    for region in region_list:
+        truth_eval_snap_unnorm[region] = eval_snap_df[f'{region}_TOTAL_CONSUMPTION'].values.copy()
 
     # scale it with the training scaler
     if scaler.lower()!='none' and scaler is not None:
@@ -337,10 +342,11 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
         print(f"  Warning: validation snapshot too short ({eval_snap_df.shape[0]} rows) for L+H={min_needed}. Using tail of training data for eval snapshot.")
         # take the last min_needed rows from train_df_fold (already scaled)
         eval_snap_df = train_df_fold.iloc[-min_needed:].copy()
-
-    truth_eval_snap = {}
-    for region in region_list:
-        truth_eval_snap[region] = eval_snap_df[f'{region}_TOTAL_CONSUMPTION'].values
+        # Also update unnormalized truth from the original (unscaled) training data
+        # We need to get the original unscaled training data for this
+        original_train_tail = df_fold.iloc[:n_train_final].iloc[-min_needed:]
+        for region in region_list:
+            truth_eval_snap_unnorm[region] = original_train_tail[f'{region}_TOTAL_CONSUMPTION'].values.copy()
     # build eval snapshot sequences (now eval_snap_df has at least L+H rows)
     X_snap_arr, Y_snap_arr = construct_sequences_multi_output(eval_snap_df, input_length, horizon, step_size=stride, target_cols=[f'{region}_TOTAL_CONSUMPTION' for region in region_list])
     print(f'  Eval snapshot sequences: X shape {X_snap_arr.shape}, Y shape {Y_snap_arr.shape}')
@@ -461,7 +467,7 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
                     load_std = 1.0
 
                 # truth for this region (unnormalized)
-                truth_reg = truth_eval_snap[reg]
+                truth_reg = truth_eval_snap_unnorm[reg]
 
                 # preview only the first target channel (preview_total_plot expects 1-D truth)
                 target_idx = region_list.index(reg)
