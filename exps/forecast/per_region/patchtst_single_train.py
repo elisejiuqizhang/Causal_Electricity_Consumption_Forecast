@@ -496,6 +496,15 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
         fold_test_smapes.append(smape)
         fold_test_mases.append(mase)
 
+        # Save test metrics for this fold
+        with open(os.path.join(OUTPUT_DIR_FOLD, 'test_metrics.txt'), 'w') as f:
+            f.write(f'Test Metrics for Fold {fold}:\n')
+            f.write(f'MAE: {mae:.4f}\n')
+            f.write(f'RMSE: {rmse:.4f}\n')
+            f.write(f'MAPE: {mape:.4f}%\n')
+            f.write(f'sMAPE: {smape:.4f}%\n')
+            f.write(f'MASE: {mase:.4f}\n')
+
         # Plot the rolling forecast vs truth
         plt.figure(figsize=(12,6))
         plt.plot(aligned_dt, true_aligned, label="True Load", linestyle="--")
