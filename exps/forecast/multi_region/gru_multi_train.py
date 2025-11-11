@@ -580,12 +580,22 @@ for fold, (start_idx, end_idx) in enumerate(fold_windows):
         list_smape.append(smape)
         list_mase.append(mase)
 
+        # Save test metrics for this region to a file
+        with open(os.path.join(OUTPUT_DIR_FOLD, f'test_metrics_{region}.txt'), 'w') as f:
+            f.write(f'Test Metrics for region {region}:\n')
+            f.write(f'MAE: {mae:.4f}\n')
+            f.write(f'RMSE: {rmse:.4f}\n')
+            f.write(f'MAPE: {mape:.4f}%\n')
+            f.write(f'sMAPE: {smape:.4f}%\n')
+            f.write(f'MASE: {mase:.4f}\n')
+
     # append per-region metrics for this fold
     fold_test_maes.append(list_mae)
     fold_test_rmses.append(list_rmse)
     fold_test_mapes.append(list_mape)
     fold_test_smapes.append(list_smape)
     fold_test_mases.append(list_mase)
+  
 
     # Plot the rolling forecast vs truth per region and save
     for i, region in enumerate(region_list):
