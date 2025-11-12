@@ -30,7 +30,7 @@ TGT_COL='TOTAL_CONSUMPTION'
 SCALING='standard'  # 'minmax' or 'standard' or None
 
 # threshold for feature selection
-MI_thres = 0.04
+MI_thres = 0.025
 list_corr_thres = np.arange(0.5, 1.0, 0.05)
 
 # load data
