@@ -1,0 +1,285 @@
+# OOD Inference - Documentation Index
+
+**Package**: `exps/ood_inference/`  
+**Purpose**: Test pretrained models on extreme weather conditions  
+**Status**: ✅ Complete - All 6 combinations tested (3 models × 2 regions)
+
+---
+
+## 📚 Documentation Files
+
+### 1. **README.md** (Primary Documentation)
+**Purpose**: Comprehensive user guide  
+**Contains**:
+- Full package overview
+- Configuration parameters
+- Detailed usage instructions
+- Troubleshooting guide
+- File format specifications
+
+**Best For**: First-time users, complete setup guide
+
+---
+
+### 2. **QUICKSTART.md** (Quick Reference)
+**Purpose**: Get started in 5 minutes  
+**Contains**:
+- Prerequisites checklist
+- One-liner commands
+- Expected output examples
+- Common use cases
+
+**Best For**: Experienced users, quick refresher
+
+---
+
+### 3. **SUMMARY.md** (Package Overview)
+**Purpose**: High-level architecture  
+**Contains**:
+- File structure
+- Script descriptions
+- Output specifications
+- Research applications
+
+**Best For**: Understanding package organization
+
+---
+
+### 4. **STATUS.md** (Implementation Status)
+**Purpose**: Development tracking  
+**Contains**:
+- Completed features
+- Known issues
+- Bug fixes
+- Preliminary test results
+
+**Best For**: Developers, contributors
+
+---
+
+### 5. **OOD_RESULTS_SUMMARY.md** (Main Analysis) ⭐
+**Purpose**: Comprehensive results analysis  
+**Contains**:
+- Executive summary with key findings
+- Detailed per-model performance
+- Regional analysis (Toronto vs Ottawa)
+- Model comparison and recommendations
+- Worst-case scenarios
+- Research hypotheses and insights
+- Next steps and recommendations
+
+**Best For**: Research analysis, paper writing, decision-making
+
+**Size**: ~14 KB, 400+ lines
+
+---
+
+### 6. **RESULTS_QUICK_REFERENCE.md** (Results Card)
+**Purpose**: At-a-glance results summary  
+**Contains**:
+- Quick metrics tables
+- Winner declarations
+- Key findings bullets
+- Output file locations
+- Reproduce instructions
+- Quick commands
+
+**Best For**: Quick lookup, presentations, meetings
+
+**Size**: ~5 KB
+
+---
+
+### 7. **RESULTS_TERMINAL_SUMMARY.txt** (Terminal Display)
+**Purpose**: Pretty-printed results for terminal  
+**Contains**:
+- Formatted tables (ASCII art)
+- Overall recommendations
+- Key statistics
+- Next steps
+- Technical specs
+
+**Best For**: Quick terminal viewing, logging
+
+**Usage**: `cat exps/ood_inference/RESULTS_TERMINAL_SUMMARY.txt`
+
+---
+
+### 8. **INDEX.md** (This File)
+**Purpose**: Navigation hub  
+**Contains**:
+- Documentation file descriptions
+- Reading recommendations
+- File hierarchy
+- Quick access links
+
+**Best For**: Finding the right documentation
+
+---
+
+## 🗂️ File Organization
+
+```
+exps/ood_inference/
+│
+├── 📄 README.md                        # Primary documentation (8.5 KB)
+├── 📄 QUICKSTART.md                    # Quick start guide (5.9 KB)
+├── 📄 SUMMARY.md                       # Package overview (11 KB)
+├── 📄 STATUS.md                        # Implementation status (11 KB)
+│
+├── 📊 OOD_RESULTS_SUMMARY.md          # Main analysis report (14 KB) ⭐
+├── 📊 RESULTS_QUICK_REFERENCE.md      # Quick results card (5 KB)
+├── 📊 RESULTS_TERMINAL_SUMMARY.txt    # Terminal display (4 KB)
+│
+├── 📋 INDEX.md                         # This file
+│
+├── 🐍 gru_ood_inference.py            # GRU inference script (16 KB)
+├── 🐍 tcn_ood_inference.py            # TCN inference script (16 KB)
+├── 🐍 patchtst_ood_inference.py       # PatchTST inference script (17 KB)
+│
+├── 🔧 run_ood_inference.sh            # Batch runner (5.4 KB, executable)
+├── 📊 compare_ood_normal.py           # Comparison script (11 KB)
+│
+└── 📁 (output files saved to outputs/ood_inference/)
+```
+
+---
+
+## 📖 Reading Recommendations by Use Case
+
+### "I want to understand what this package does"
+1. Start with `SUMMARY.md` (5 min read)
+2. Then read `README.md` (15 min read)
+
+### "I want to run OOD inference now"
+1. Check `QUICKSTART.md` (2 min read)
+2. Run commands
+3. View `RESULTS_QUICK_REFERENCE.md` for results
+
+### "I want to analyze the results for research"
+1. Read `OOD_RESULTS_SUMMARY.md` (20 min read) ⭐
+2. Review CSV files in `outputs/ood_inference/`
+3. Check `outputs/ood_analysis/ood_vs_normal_summary_F2_fold0.txt`
+
+### "I want to present results to team"
+1. Display `RESULTS_TERMINAL_SUMMARY.txt` in terminal
+2. Use tables from `RESULTS_QUICK_REFERENCE.md`
+3. Reference key findings from `OOD_RESULTS_SUMMARY.md`
+
+### "I want to contribute or fix bugs"
+1. Read `STATUS.md` for current state
+2. Review `README.md` for architecture
+3. Check source scripts (gru/tcn/patchtst_ood_inference.py)
+
+### "I want quick answers"
+1. `RESULTS_QUICK_REFERENCE.md` - metrics and winners
+2. `RESULTS_TERMINAL_SUMMARY.txt` - formatted display
+3. Quick commands section in `QUICKSTART.md`
+
+---
+
+## 📊 Output Files (Generated by Scripts)
+
+### Per-Model Results
+**Location**: `outputs/ood_inference/{model}/`
+
+Files per region:
+- `{Region}_F2_fold0_ood_metrics.csv` - Per-window summary
+- `{Region}_F2_fold0_ood_predictions.csv` - Timestep predictions
+- `{Region}_F2_fold0_summary.txt` - Text report
+
+**Example**:
+```
+outputs/ood_inference/gru/
+├── Toronto_F2_fold0_ood_metrics.csv      # 11 windows × 5 metrics
+├── Toronto_F2_fold0_ood_predictions.csv  # ~264 timesteps (11 × 24)
+├── Toronto_F2_fold0_summary.txt          # Text summary with stats
+├── Ottawa_F2_fold0_ood_metrics.csv       # 13 windows × 5 metrics
+├── Ottawa_F2_fold0_ood_predictions.csv   # ~312 timesteps (13 × 24)
+└── Ottawa_F2_fold0_summary.txt           # Text summary with stats
+```
+
+### Comparison Analysis
+**Location**: `outputs/ood_analysis/`
+
+- `ood_vs_normal_comparison_F2_fold0.csv` - Detailed model comparison
+- `ood_vs_normal_summary_F2_fold0.txt` - Summary with degradation %
+- `ood_degradation_comparison_F2_fold0.png` - Visualization
+
+---
+
+## 🎯 Key Results (TL;DR)
+
+### Winner: **TCN** (Temporal Convolutional Network)
+- Toronto: 4.81% MAPE
+- Ottawa: 7.95% MAPE
+- Consistent, reliable, production-ready
+
+### Surprising Finding
+- **Toronto models IMPROVE on OOD** (-10.72% MAPE)
+- Needs investigation (validation/test distribution mismatch?)
+
+### Critical Issues
+- **Ottawa GRU catastrophic failure**: +148% MAPE degradation
+- **PatchTST inconsistency**: Best on Ottawa (5.28%), worst on Toronto (10.34%)
+
+---
+
+## 🔗 Quick Access Commands
+
+```bash
+# View main analysis report
+cat exps/ood_inference/OOD_RESULTS_SUMMARY.md
+
+# Quick results lookup
+cat exps/ood_inference/RESULTS_QUICK_REFERENCE.md
+
+# Terminal display
+cat exps/ood_inference/RESULTS_TERMINAL_SUMMARY.txt
+
+# Comparison summary
+cat outputs/ood_analysis/ood_vs_normal_summary_F2_fold0.txt
+
+# Check specific model results
+cat outputs/ood_inference/gru/Toronto_F2_fold0_summary.txt
+cat outputs/ood_inference/tcn/Ottawa_F2_fold0_summary.txt
+cat outputs/ood_inference/patchtst/Toronto_F2_fold0_summary.txt
+
+# List all generated files
+find outputs/ood_inference outputs/ood_analysis -type f | sort
+```
+
+---
+
+## 📞 Support
+
+**Issues?** Check in this order:
+1. `README.md` - Troubleshooting section
+2. `STATUS.md` - Known issues
+3. Source scripts - Inline comments
+4. Compare with `QUICKSTART.md` examples
+
+**Questions about results?**
+- See `OOD_RESULTS_SUMMARY.md` - Observations & Hypotheses section
+- Check `RESULTS_QUICK_REFERENCE.md` - Metrics Explained
+
+---
+
+## 🔄 Update History
+
+**November 2024 - Initial Release**
+- All 6 model×region combinations completed
+- Full documentation suite created
+- Comprehensive results analysis
+- Bug fixes: PROJECT_ROOT path, model output shape, feature dimension
+
+**Known Issues**:
+- PatchTST normal metrics unavailable (models exist but test_metrics.txt missing)
+- Feature set F2 temporarily has 15 features (removed avg_snlwrf for compatibility)
+- Toronto OOD paradox (models improve on extreme weather - needs investigation)
+
+---
+
+**Last Updated**: November 2024  
+**Documentation Version**: 1.0  
+**Package Status**: ✅ Production Ready

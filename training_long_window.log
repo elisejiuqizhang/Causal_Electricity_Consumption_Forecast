@@ -1,0 +1,70 @@
+nohup: ignoring input
+================================================================================
+Training All Models on Long Window (2018-01-01 to 2023-03-10)
+================================================================================
+Regions: Toronto Ottawa
+Feature Sets: F0 F1 F2 F3
+Models: gru tcn patchtst
+Total configurations: 24
+Parallel jobs: 6
+================================================================================
+
+[gru|Toronto|F3]	[2025-11-12 07:18:01] Starting: gru | Toronto | F3
+[gru|Toronto|F2]	[2025-11-12 07:18:01] Starting: gru | Toronto | F2
+[gru|Toronto|F1]	[2025-11-12 07:18:01] Starting: gru | Toronto | F1
+[gru|Ottawa|F0]	[2025-11-12 07:18:01] Starting: gru | Ottawa | F0
+[gru|Toronto|F0]	[2025-11-12 07:18:01] Starting: gru | Toronto | F0
+[gru|Ottawa|F1]	[2025-11-12 07:18:01] Starting: gru | Ottawa | F1
+[gru|Toronto|F2]	[2025-11-12 07:25:47] ✅ Successfully trained: gru | Toronto | F2
+[gru|Ottawa|F2]	[2025-11-12 07:25:47] Starting: gru | Ottawa | F2
+[gru|Ottawa|F1]	[2025-11-12 07:26:53] ✅ Successfully trained: gru | Ottawa | F1
+[gru|Ottawa|F3]	[2025-11-12 07:26:53] Starting: gru | Ottawa | F3
+[gru|Toronto|F3]	[2025-11-12 07:28:09] ✅ Successfully trained: gru | Toronto | F3
+[tcn|Toronto|F0]	[2025-11-12 07:28:09] Starting: tcn | Toronto | F0
+[gru|Toronto|F1]	[2025-11-12 07:29:08] ✅ Successfully trained: gru | Toronto | F1
+[tcn|Toronto|F1]	[2025-11-12 07:29:08] Starting: tcn | Toronto | F1
+[gru|Toronto|F0]	[2025-11-12 07:30:36] ✅ Successfully trained: gru | Toronto | F0
+[tcn|Toronto|F2]	[2025-11-12 07:30:36] Starting: tcn | Toronto | F2
+[gru|Ottawa|F0]	[2025-11-12 07:31:15] ✅ Successfully trained: gru | Ottawa | F0
+[tcn|Toronto|F3]	[2025-11-12 07:31:15] Starting: tcn | Toronto | F3
+[gru|Ottawa|F2]	[2025-11-12 07:35:12] ✅ Successfully trained: gru | Ottawa | F2
+[tcn|Ottawa|F0]	[2025-11-12 07:35:12] Starting: tcn | Ottawa | F0
+[tcn|Toronto|F3]	[2025-11-12 07:35:43] ✅ Successfully trained: tcn | Toronto | F3
+[tcn|Ottawa|F1]	[2025-11-12 07:35:43] Starting: tcn | Ottawa | F1
+[gru|Ottawa|F3]	[2025-11-12 07:36:14] ✅ Successfully trained: gru | Ottawa | F3
+[tcn|Ottawa|F2]	[2025-11-12 07:36:14] Starting: tcn | Ottawa | F2
+[tcn|Toronto|F1]	[2025-11-12 07:36:18] ✅ Successfully trained: tcn | Toronto | F1
+[tcn|Ottawa|F3]	[2025-11-12 07:36:18] Starting: tcn | Ottawa | F3
+[tcn|Toronto|F0]	[2025-11-12 07:37:06] ✅ Successfully trained: tcn | Toronto | F0
+[patchtst|Toronto|F0]	[2025-11-12 07:37:06] Starting: patchtst | Toronto | F0
+[tcn|Toronto|F2]	[2025-11-12 07:41:01] ✅ Successfully trained: tcn | Toronto | F2
+[patchtst|Toronto|F1]	[2025-11-12 07:41:01] Starting: patchtst | Toronto | F1
+[tcn|Ottawa|F1]	[2025-11-12 07:46:18] ✅ Successfully trained: tcn | Ottawa | F1
+[patchtst|Toronto|F2]	[2025-11-12 07:46:18] Starting: patchtst | Toronto | F2
+[tcn|Ottawa|F0]	[2025-11-12 07:46:37] ✅ Successfully trained: tcn | Ottawa | F0
+[patchtst|Toronto|F3]	[2025-11-12 07:46:37] Starting: patchtst | Toronto | F3
+[patchtst|Toronto|F0]	[2025-11-12 07:47:09] ✅ Successfully trained: patchtst | Toronto | F0
+[patchtst|Ottawa|F0]	[2025-11-12 07:47:09] Starting: patchtst | Ottawa | F0
+[tcn|Ottawa|F3]	[2025-11-12 07:48:55] ✅ Successfully trained: tcn | Ottawa | F3
+[patchtst|Ottawa|F1]	[2025-11-12 07:48:55] Starting: patchtst | Ottawa | F1
+[tcn|Ottawa|F2]	[2025-11-12 07:57:10] ✅ Successfully trained: tcn | Ottawa | F2
+[patchtst|Ottawa|F2]	[2025-11-12 07:57:10] Starting: patchtst | Ottawa | F2
+[patchtst|Toronto|F3]	[2025-11-12 08:19:05] ✅ Successfully trained: patchtst | Toronto | F3
+[patchtst|Ottawa|F3]	[2025-11-12 08:19:05] Starting: patchtst | Ottawa | F3
+[patchtst|Ottawa|F0]	[2025-11-12 08:24:48] ✅ Successfully trained: patchtst | Ottawa | F0
+[patchtst|Toronto|F2]	[2025-11-12 08:25:28] ✅ Successfully trained: patchtst | Toronto | F2
+[patchtst|Toronto|F1]	[2025-11-12 08:26:15] ✅ Successfully trained: patchtst | Toronto | F1
+[patchtst|Ottawa|F1]	[2025-11-12 08:26:29] ✅ Successfully trained: patchtst | Ottawa | F1
+[patchtst|Ottawa|F2]	[2025-11-12 08:30:15] ✅ Successfully trained: patchtst | Ottawa | F2
+[patchtst|Ottawa|F3]	[2025-11-12 08:33:10] ✅ Successfully trained: patchtst | Ottawa | F3
+
+================================================================================
+✅ All training jobs completed!
+================================================================================
+Job log saved to: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/training_logs_long_window/parallel_jobs.log
+Individual logs saved to: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/training_logs_long_window/
+
+Summary:
+  Successful: 24
+  Failed: 0
+================================================================================

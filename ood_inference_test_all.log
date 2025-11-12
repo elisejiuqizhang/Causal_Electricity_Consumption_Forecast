@@ -1,0 +1,523 @@
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Models: gru tcn patchtst
+Regions: Toronto Ottawa
+Feature Sets: F0, F1, F2, F3 (all tested per model)
+Total configurations: 6
+================================================================================
+
+
+--------------------------------------------------------------------------------
+[1/6] Running: gru | Toronto (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: GRU
+Region: Toronto
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 84 OOD windows for Toronto
+
+Loading test data for Toronto...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/gru_long_window/ood_results_Toronto.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=47991.34, RMSE=62058.02, MAPE=7.02%, SMAPE=6.95%
+F1: MAE=52399.32, RMSE=66544.76, MAPE=7.61%, SMAPE=7.58%
+F2: MAE=48078.22, RMSE=61630.36, MAPE=7.10%, SMAPE=7.03%
+F3: MAE=50338.27, RMSE=64106.96, MAPE=7.28%, SMAPE=7.28%
+================================================================================
+✅ Successfully completed: gru | Toronto
+
+--------------------------------------------------------------------------------
+[2/6] Running: gru | Ottawa (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: GRU
+Region: Ottawa
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 86 OOD windows for Ottawa
+
+Loading test data for Ottawa...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/gru_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/gru_long_window/ood_results_Ottawa.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=38252.02, RMSE=48064.25, MAPE=9.70%, SMAPE=10.12%
+F1: MAE=27227.58, RMSE=35204.50, MAPE=7.40%, SMAPE=7.36%
+F2: MAE=34128.03, RMSE=44321.72, MAPE=8.93%, SMAPE=9.04%
+F3: MAE=38898.33, RMSE=49289.69, MAPE=9.74%, SMAPE=10.29%
+================================================================================
+✅ Successfully completed: gru | Ottawa
+
+--------------------------------------------------------------------------------
+[3/6] Running: tcn | Toronto (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: TCN
+Region: Toronto
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 84 OOD windows for Toronto
+
+Loading test data for Toronto...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/tcn_long_window/ood_results_Toronto.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=46397.12, RMSE=59530.61, MAPE=6.73%, SMAPE=6.71%
+F1: MAE=45561.38, RMSE=57869.83, MAPE=6.57%, SMAPE=6.60%
+F2: MAE=45112.20, RMSE=58117.21, MAPE=6.56%, SMAPE=6.54%
+F3: MAE=46783.80, RMSE=59840.80, MAPE=6.80%, SMAPE=6.76%
+================================================================================
+✅ Successfully completed: tcn | Toronto
+
+--------------------------------------------------------------------------------
+[4/6] Running: tcn | Ottawa (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: TCN
+Region: Ottawa
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 86 OOD windows for Ottawa
+
+Loading test data for Ottawa...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/tcn_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/tcn_long_window/ood_results_Ottawa.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=28231.02, RMSE=36779.35, MAPE=7.31%, SMAPE=7.41%
+F1: MAE=26310.96, RMSE=34501.18, MAPE=6.93%, SMAPE=6.96%
+F2: MAE=26116.26, RMSE=34637.13, MAPE=6.89%, SMAPE=6.90%
+F3: MAE=26894.86, RMSE=35433.46, MAPE=7.05%, SMAPE=7.09%
+================================================================================
+✅ Successfully completed: tcn | Ottawa
+
+--------------------------------------------------------------------------------
+[5/6] Running: patchtst | Toronto (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: PATCHTST
+Region: Toronto
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 84 OOD windows for Toronto
+
+Loading test data for Toronto...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Toronto/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 84 OOD windows...
+✅ Evaluated 84 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/patchtst_long_window/ood_results_Toronto.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=44633.18, RMSE=57129.06, MAPE=6.42%, SMAPE=6.45%
+F1: MAE=50540.80, RMSE=64167.41, MAPE=7.50%, SMAPE=7.46%
+F2: MAE=50722.58, RMSE=63340.69, MAPE=7.31%, SMAPE=7.47%
+F3: MAE=44190.50, RMSE=57354.00, MAPE=6.46%, SMAPE=6.43%
+================================================================================
+✅ Successfully completed: patchtst | Toronto
+
+--------------------------------------------------------------------------------
+[6/6] Running: patchtst | Ottawa (testing F0, F1, F2, F3)
+--------------------------------------------------------------------------------
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference_test/ood_inference_long_window.py:236: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(model_path, map_location=device)
+================================================================================
+OOD Inference - Long Window Models
+================================================================================
+Model: PATCHTST
+Region: Ottawa
+Test Period: 2023-03-11 to 2024-03-10
+================================================================================
+
+✅ Loaded 86 OOD windows for Ottawa
+
+Loading test data for Ottawa...
+✅ Loaded 8784 test records
+   Date range: 2023-03-11 00:00:00 to 2024-03-10 23:00:00
+
+================================================================================
+Testing Feature Set: F0
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F0/97
+  Test sequences: (8593, 11, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F0
+
+================================================================================
+Testing Feature Set: F1
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F1/97
+  Test sequences: (8593, 19, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F1
+
+================================================================================
+Testing Feature Set: F2
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F2/97
+  Test sequences: (8593, 16, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F2
+
+================================================================================
+Testing Feature Set: F3
+================================================================================
+✅ Loading model from: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast_long_window/per_region/patchtst_single_train/Ottawa/bs64_ep500_lr0.0001_longwindow/F3/97
+  Test sequences: (8593, 14, 168)
+✅ Model loaded
+
+Evaluating on 86 OOD windows...
+✅ Evaluated 86 windows for F3
+
+================================================================================
+✅ OOD Inference Complete!
+================================================================================
+Results saved to: /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference_test/patchtst_long_window/ood_results_Ottawa.csv
+
+Summary by Feature Set:
+--------------------------------------------------------------------------------
+F0: MAE=27163.15, RMSE=35233.78, MAPE=7.13%, SMAPE=7.19%
+F1: MAE=25841.02, RMSE=33831.97, MAPE=7.04%, SMAPE=7.07%
+F2: MAE=28061.96, RMSE=36072.14, MAPE=7.69%, SMAPE=7.73%
+F3: MAE=24740.34, RMSE=32745.90, MAPE=6.62%, SMAPE=6.64%
+================================================================================
+✅ Successfully completed: patchtst | Ottawa
+
+================================================================================
+✅ All OOD inference jobs completed!
+================================================================================
+Results saved in: outputs/ood_inference_test/
+
+Next step: Compare results across feature sets
+================================================================================

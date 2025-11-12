@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_weather/identify_ood_weather_test_period.py", line 31, in <module>
+    from utils.data_utils.info_cities import city_name_mapping
+ImportError: cannot import name 'city_name_mapping' from 'utils.data_utils.info_cities' (/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/utils/data_utils/info_cities.py)

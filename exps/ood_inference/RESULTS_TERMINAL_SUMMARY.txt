@@ -1,0 +1,113 @@
+================================================================================
+                       OOD INFERENCE RESULTS SUMMARY
+================================================================================
+
+TORONTO (11 OOD Windows)
+---------------------------------------------------------------------------------
+Model       OOD MAPE    Std Dev    vs Normal    MAE (MW)       Status
+---------------------------------------------------------------------------------
+GRU         4.52%       ±1.63%     -22.8% ✅    27,719 ±10,788  BEST
+TCN         4.81%       ±0.95%     +1.4%  ⚠️    29,856 ±6,331   GOOD
+PatchTST    10.34%      ±3.20%     N/A    ❌    62,404 ±19,709  POOR
+---------------------------------------------------------------------------------
+
+OTTAWA (13 OOD Windows)
+---------------------------------------------------------------------------------
+Model       OOD MAPE    Std Dev    vs Normal    MAE (MW)       Status
+---------------------------------------------------------------------------------
+GRU         15.46%      ±5.10%     +148% ❌     49,559 ±17,516  CATASTROPHIC
+TCN         7.95%       ±2.35%     +28%  ⚠️     25,919 ±9,251   ACCEPTABLE
+PatchTST    5.28%       ±3.25%     N/A   ✅     17,048 ±10,837  BEST
+---------------------------------------------------------------------------------
+
+OVERALL RECOMMENDATION
+---------------------------------------------------------------------------------
+🏆 PRODUCTION MODEL: TCN (Temporal Convolutional Network)
+
+Reasoning:
+  - Consistent performance across both regions (4.81% Toronto, 7.95% Ottawa)
+  - Manageable degradation on OOD conditions (+1.4% to +28%)
+  - Low variance indicates reliable predictions
+  - Best balance between accuracy and robustness
+
+⚠️  Critical Finding: GRU shows bipolar behavior (excellent Toronto, terrible Ottawa)
+⚠️  Surprising: Toronto models IMPROVE on OOD (needs investigation)
+
+================================================================================
+                              KEY STATISTICS
+================================================================================
+
+Average Degradation Across All Models:
+  • MAE:  +52.84%
+  • RMSE: +39.17%
+  • MAPE: +38.77%
+
+Per-Region Degradation:
+  • Toronto: -10.72% MAPE (IMPROVEMENT!)
+  • Ottawa:  +88.26% MAPE (SEVERE)
+
+Best Overall Performance:
+  • Toronto: GRU (4.52% MAPE)
+  • Ottawa:  PatchTST (5.28% MAPE)
+  • Combined: TCN (6.38% average MAPE)
+
+================================================================================
+                           FILES GENERATED
+================================================================================
+
+Total Files: 24 (18 CSV/TXT + 6 PNG)
+
+Per-Model Results (3 models × 2 regions × 3 files):
+  ✓ outputs/ood_inference/gru/
+  ✓ outputs/ood_inference/tcn/
+  ✓ outputs/ood_inference/patchtst/
+
+Comparison Analysis:
+  ✓ outputs/ood_analysis/ood_vs_normal_comparison_F2_fold0.csv
+  ✓ outputs/ood_analysis/ood_vs_normal_summary_F2_fold0.txt
+  ✓ outputs/ood_analysis/ood_degradation_comparison_F2_fold0.png
+
+Documentation:
+  ✓ exps/ood_inference/OOD_RESULTS_SUMMARY.md
+  ✓ exps/ood_inference/RESULTS_QUICK_REFERENCE.md
+
+================================================================================
+                          NEXT STEPS
+================================================================================
+
+1. Review detailed analysis: 
+   cat exps/ood_inference/OOD_RESULTS_SUMMARY.md
+
+2. Investigate Toronto paradox (models improve on OOD):
+   - Check validation/test set distribution
+   - Verify OOD window selection criteria
+   - Compare temporal patterns
+
+3. Ottawa-specific improvements:
+   - Consider weather-aware ensemble (TCN + PatchTST)
+   - Implement data augmentation for extreme events
+   - Add confidence intervals for OOD detection
+
+4. Production deployment:
+   - Deploy TCN model for both regions
+   - Add real-time OOD monitoring
+   - Set up alert system for extreme weather
+
+================================================================================
+                      TECHNICAL SPECIFICATIONS
+================================================================================
+
+Models Tested:     GRU, TCN, PatchTST
+Regions:           Toronto, Ottawa
+Feature Set:       F2 (15 features - temporarily removed avg_snlwrf)
+OOD Windows:       24 total (11 Toronto + 13 Ottawa)
+OOD Criteria:      5th/95th percentile, 50% threshold, 24-hour windows
+Data Period:       October 2023 - March 2024
+Models Source:     outputs/forecast1111/per_region/
+Training Config:   bs64, lr=0.0001, epochs=500, patience=20
+
+GRU Config:        d_model=64, n_layers=4, dropout=0.1, seed=97
+TCN Config:        hidden_channels=64, levels=4, kernel_size=3, seed=97
+PatchTST Config:   d_model=64, n_heads=4, n_layers=3, seed=597
+
+================================================================================

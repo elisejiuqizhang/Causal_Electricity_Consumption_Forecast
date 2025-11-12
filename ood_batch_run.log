@@ -1,0 +1,771 @@
+==========================================
+OOD Inference Runner
+==========================================
+Regions: Toronto Ottawa
+Models: gru tcn patchtst
+Feature Set: F2
+Fold: 0
+==========================================
+
+==========================================
+Running gru inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/gru_ood_inference.py:94: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/11: 2024-01-20 13:00:00 to 2024-01-21 12:00:00
+  MAE: 32046.1973, RMSE: 36639.8884, MAPE: 4.46%, SMAPE: 4.60%
+
+Processing window 2/11: 2024-01-17 10:00:00 to 2024-01-18 09:00:00
+  MAE: 20713.1312, RMSE: 24506.2068, MAPE: 3.09%, SMAPE: 3.16%
+
+Processing window 3/11: 2024-01-15 09:00:00 to 2024-01-16 08:00:00
+  MAE: 18555.5837, RMSE: 25462.0468, MAPE: 2.88%, SMAPE: 2.95%
+
+Processing window 4/11: 2024-01-10 02:00:00 to 2024-01-11 01:00:00
+  MAE: 19367.6759, RMSE: 23591.6339, MAPE: 3.33%, SMAPE: 3.41%
+
+Processing window 5/11: 2024-01-13 03:00:00 to 2024-01-14 02:00:00
+  MAE: 41255.9029, RMSE: 48761.1242, MAPE: 6.03%, SMAPE: 6.26%
+
+Processing window 6/11: 2023-11-09 01:00:00 to 2023-11-10 00:00:00
+  MAE: 25831.6545, RMSE: 34340.2507, MAPE: 4.81%, SMAPE: 4.71%
+
+Processing window 7/11: 2023-12-10 03:00:00 to 2023-12-11 02:00:00
+  MAE: 39905.7935, RMSE: 45816.9621, MAPE: 6.46%, SMAPE: 6.60%
+
+Processing window 8/11: 2023-10-06 01:00:00 to 2023-10-07 00:00:00
+  MAE: 21016.8273, RMSE: 26356.2031, MAPE: 4.01%, SMAPE: 4.00%
+
+Processing window 9/11: 2024-01-26 05:00:00 to 2024-01-27 04:00:00
+  MAE: 16412.1130, RMSE: 19234.0349, MAPE: 2.80%, SMAPE: 2.78%
+
+Processing window 10/11: 2024-03-09 08:00:00 to 2024-03-10 07:00:00
+  MAE: 22038.7738, RMSE: 27026.2218, MAPE: 4.08%, SMAPE: 4.11%
+
+Processing window 11/11: 2024-02-24 04:00:00 to 2024-02-25 03:00:00
+  MAE: 47765.0090, RMSE: 52370.9803, MAPE: 7.80%, SMAPE: 8.23%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 11
+
+Average metrics across all OOD windows:
+  MAE:   27718.9693 ± 10787.5839
+  RMSE:  33100.5048 ± 11356.3500
+  MAPE:  4.52% ± 1.63%
+  SMAPE: 4.62% ± 1.73%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_summary.txt
+
+==========================================
+Running tcn inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/tcn_ood_inference.py:97: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/11: 2024-01-20 13:00:00 to 2024-01-21 12:00:00
+  MAE: 32666.8379, RMSE: 39033.7397, MAPE: 4.49%, SMAPE: 4.64%
+
+Processing window 2/11: 2024-01-17 10:00:00 to 2024-01-18 09:00:00
+  MAE: 35944.0159, RMSE: 38270.1429, MAPE: 5.12%, SMAPE: 5.27%
+
+Processing window 3/11: 2024-01-15 09:00:00 to 2024-01-16 08:00:00
+  MAE: 25559.1367, RMSE: 30846.3674, MAPE: 3.84%, SMAPE: 3.89%
+
+Processing window 4/11: 2024-01-10 02:00:00 to 2024-01-11 01:00:00
+  MAE: 32632.0366, RMSE: 42728.1378, MAPE: 5.08%, SMAPE: 5.30%
+
+Processing window 5/11: 2024-01-13 03:00:00 to 2024-01-14 02:00:00
+  MAE: 40176.3821, RMSE: 43541.7920, MAPE: 6.08%, SMAPE: 6.18%
+
+Processing window 6/11: 2023-11-09 01:00:00 to 2023-11-10 00:00:00
+  MAE: 32742.6851, RMSE: 38378.7795, MAPE: 6.14%, SMAPE: 5.90%
+
+Processing window 7/11: 2023-12-10 03:00:00 to 2023-12-11 02:00:00
+  MAE: 31122.0309, RMSE: 35715.4853, MAPE: 5.27%, SMAPE: 5.28%
+
+Processing window 8/11: 2023-10-06 01:00:00 to 2023-10-07 00:00:00
+  MAE: 24130.4888, RMSE: 27938.5963, MAPE: 4.90%, SMAPE: 4.98%
+
+Processing window 9/11: 2024-01-26 05:00:00 to 2024-01-27 04:00:00
+  MAE: 16608.6738, RMSE: 18673.3545, MAPE: 2.86%, SMAPE: 2.86%
+
+Processing window 10/11: 2024-03-09 08:00:00 to 2024-03-10 07:00:00
+  MAE: 29062.9916, RMSE: 35250.8795, MAPE: 4.92%, SMAPE: 5.09%
+
+Processing window 11/11: 2024-02-24 04:00:00 to 2024-02-25 03:00:00
+  MAE: 27765.3973, RMSE: 32600.3476, MAPE: 4.18%, SMAPE: 4.29%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 11
+
+Average metrics across all OOD windows:
+  MAE:   29855.5161 ± 6331.2940
+  RMSE:  34816.1475 ± 7146.3570
+  MAPE:  4.81% ± 0.95%
+  SMAPE: 4.88% ± 0.94%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_summary.txt
+
+==========================================
+Running patchtst inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py:100: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/patchtst_single_train/Toronto/dm32_nh4_nl3_pl16_ps8_inlen168_h24_scalerstandard/overlap/stride1/mean/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/597/fold_0/best_model.pth
+Traceback (most recent call last):
+  File "/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py", line 423, in <module>
+    main()
+  File "/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py", line 306, in main
+    model, scaler = load_model_and_scaler(
+  File "/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py", line 100, in load_model_and_scaler
+    model.load_state_dict(torch.load(model_path, map_location=device))
+  File "/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/serialization.py", line 1319, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/serialization.py", line 659, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/serialization.py", line 640, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/patchtst_single_train/Toronto/dm32_nh4_nl3_pl16_ps8_inlen168_h24_scalerstandard/overlap/stride1/mean/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/597/fold_0/best_model.pth'
+==========================================
+OOD Inference Runner
+==========================================
+Regions: Toronto Ottawa
+Models: gru tcn patchtst
+Feature Set: F2
+Fold: 0
+==========================================
+
+==========================================
+Running gru inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/gru_ood_inference.py:94: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/gru_single_train/Toronto/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/11: 2024-01-20 13:00:00 to 2024-01-21 12:00:00
+  MAE: 32046.1973, RMSE: 36639.8884, MAPE: 4.46%, SMAPE: 4.60%
+
+Processing window 2/11: 2024-01-17 10:00:00 to 2024-01-18 09:00:00
+  MAE: 20713.1312, RMSE: 24506.2068, MAPE: 3.09%, SMAPE: 3.16%
+
+Processing window 3/11: 2024-01-15 09:00:00 to 2024-01-16 08:00:00
+  MAE: 18555.5837, RMSE: 25462.0468, MAPE: 2.88%, SMAPE: 2.95%
+
+Processing window 4/11: 2024-01-10 02:00:00 to 2024-01-11 01:00:00
+  MAE: 19367.6759, RMSE: 23591.6339, MAPE: 3.33%, SMAPE: 3.41%
+
+Processing window 5/11: 2024-01-13 03:00:00 to 2024-01-14 02:00:00
+  MAE: 41255.9029, RMSE: 48761.1242, MAPE: 6.03%, SMAPE: 6.26%
+
+Processing window 6/11: 2023-11-09 01:00:00 to 2023-11-10 00:00:00
+  MAE: 25831.6545, RMSE: 34340.2507, MAPE: 4.81%, SMAPE: 4.71%
+
+Processing window 7/11: 2023-12-10 03:00:00 to 2023-12-11 02:00:00
+  MAE: 39905.7935, RMSE: 45816.9621, MAPE: 6.46%, SMAPE: 6.60%
+
+Processing window 8/11: 2023-10-06 01:00:00 to 2023-10-07 00:00:00
+  MAE: 21016.8273, RMSE: 26356.2031, MAPE: 4.01%, SMAPE: 4.00%
+
+Processing window 9/11: 2024-01-26 05:00:00 to 2024-01-27 04:00:00
+  MAE: 16412.1130, RMSE: 19234.0349, MAPE: 2.80%, SMAPE: 2.78%
+
+Processing window 10/11: 2024-03-09 08:00:00 to 2024-03-10 07:00:00
+  MAE: 22038.7738, RMSE: 27026.2218, MAPE: 4.08%, SMAPE: 4.11%
+
+Processing window 11/11: 2024-02-24 04:00:00 to 2024-02-25 03:00:00
+  MAE: 47765.0090, RMSE: 52370.9803, MAPE: 7.80%, SMAPE: 8.23%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 11
+
+Average metrics across all OOD windows:
+  MAE:   27718.9693 ± 10787.5839
+  RMSE:  33100.5048 ± 11356.3500
+  MAPE:  4.52% ± 1.63%
+  SMAPE: 4.62% ± 1.73%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Toronto_F2_fold0_summary.txt
+
+==========================================
+Running tcn inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/tcn_ood_inference.py:97: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/tcn_single_train/Toronto/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/11: 2024-01-20 13:00:00 to 2024-01-21 12:00:00
+  MAE: 32666.8379, RMSE: 39033.7397, MAPE: 4.49%, SMAPE: 4.64%
+
+Processing window 2/11: 2024-01-17 10:00:00 to 2024-01-18 09:00:00
+  MAE: 35944.0159, RMSE: 38270.1429, MAPE: 5.12%, SMAPE: 5.27%
+
+Processing window 3/11: 2024-01-15 09:00:00 to 2024-01-16 08:00:00
+  MAE: 25559.1367, RMSE: 30846.3674, MAPE: 3.84%, SMAPE: 3.89%
+
+Processing window 4/11: 2024-01-10 02:00:00 to 2024-01-11 01:00:00
+  MAE: 32632.0366, RMSE: 42728.1378, MAPE: 5.08%, SMAPE: 5.30%
+
+Processing window 5/11: 2024-01-13 03:00:00 to 2024-01-14 02:00:00
+  MAE: 40176.3821, RMSE: 43541.7920, MAPE: 6.08%, SMAPE: 6.18%
+
+Processing window 6/11: 2023-11-09 01:00:00 to 2023-11-10 00:00:00
+  MAE: 32742.6851, RMSE: 38378.7795, MAPE: 6.14%, SMAPE: 5.90%
+
+Processing window 7/11: 2023-12-10 03:00:00 to 2023-12-11 02:00:00
+  MAE: 31122.0309, RMSE: 35715.4853, MAPE: 5.27%, SMAPE: 5.28%
+
+Processing window 8/11: 2023-10-06 01:00:00 to 2023-10-07 00:00:00
+  MAE: 24130.4888, RMSE: 27938.5963, MAPE: 4.90%, SMAPE: 4.98%
+
+Processing window 9/11: 2024-01-26 05:00:00 to 2024-01-27 04:00:00
+  MAE: 16608.6738, RMSE: 18673.3545, MAPE: 2.86%, SMAPE: 2.86%
+
+Processing window 10/11: 2024-03-09 08:00:00 to 2024-03-10 07:00:00
+  MAE: 29062.9916, RMSE: 35250.8795, MAPE: 4.92%, SMAPE: 5.09%
+
+Processing window 11/11: 2024-02-24 04:00:00 to 2024-02-25 03:00:00
+  MAE: 27765.3973, RMSE: 32600.3476, MAPE: 4.18%, SMAPE: 4.29%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 11
+
+Average metrics across all OOD windows:
+  MAE:   29855.5161 ± 6331.2940
+  RMSE:  34816.1475 ± 7146.3570
+  MAPE:  4.81% ± 0.95%
+  SMAPE: 4.88% ± 0.94%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Toronto_F2_fold0_summary.txt
+
+==========================================
+Running patchtst inference for Toronto
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py:100: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Toronto
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Toronto_val.csv
+Found 11 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/patchtst_single_train/Toronto/dm64_nh4_nl3_pl16_ps8_inlen168_h24_scalerstandard/overlap/stride1/mean/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/597/fold_0/best_model.pth
+
+Processing window 1/11: 2024-01-20 13:00:00 to 2024-01-21 12:00:00
+  MAE: 72497.8734, RMSE: 81464.8765, MAPE: 10.77%, SMAPE: 11.69%
+
+Processing window 2/11: 2024-01-17 10:00:00 to 2024-01-18 09:00:00
+  MAE: 72497.2907, RMSE: 84602.5454, MAPE: 11.03%, SMAPE: 12.00%
+
+Processing window 3/11: 2024-01-15 09:00:00 to 2024-01-16 08:00:00
+  MAE: 57743.9226, RMSE: 78344.1677, MAPE: 9.25%, SMAPE: 10.14%
+
+Processing window 4/11: 2024-01-10 02:00:00 to 2024-01-11 01:00:00
+  MAE: 53040.4907, RMSE: 58867.0247, MAPE: 8.85%, SMAPE: 9.39%
+
+Processing window 5/11: 2024-01-13 03:00:00 to 2024-01-14 02:00:00
+  MAE: 49183.7838, RMSE: 57434.2006, MAPE: 7.46%, SMAPE: 7.87%
+
+Processing window 6/11: 2023-11-09 01:00:00 to 2023-11-10 00:00:00
+  MAE: 50445.3720, RMSE: 65523.2015, MAPE: 9.65%, SMAPE: 10.56%
+
+Processing window 7/11: 2023-12-10 03:00:00 to 2023-12-11 02:00:00
+  MAE: 82221.0626, RMSE: 91945.0077, MAPE: 13.86%, SMAPE: 15.23%
+
+Processing window 8/11: 2023-10-06 01:00:00 to 2023-10-07 00:00:00
+  MAE: 31334.9100, RMSE: 39593.5583, MAPE: 5.94%, SMAPE: 5.70%
+
+Processing window 9/11: 2024-01-26 05:00:00 to 2024-01-27 04:00:00
+  MAE: 39936.5273, RMSE: 41628.4309, MAPE: 7.00%, SMAPE: 7.30%
+
+Processing window 10/11: 2024-03-09 08:00:00 to 2024-03-10 07:00:00
+  MAE: 89095.6368, RMSE: 91132.4610, MAPE: 16.27%, SMAPE: 17.84%
+
+Processing window 11/11: 2024-02-24 04:00:00 to 2024-02-25 03:00:00
+  MAE: 88450.7760, RMSE: 92137.5159, MAPE: 13.68%, SMAPE: 14.84%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 11
+
+Average metrics across all OOD windows:
+  MAE:   62404.3314 ± 19709.4013
+  RMSE:  71152.0900 ± 19619.6792
+  MAPE:  10.34% ± 3.20%
+  SMAPE: 11.14% ± 3.68%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Toronto_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Toronto_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Toronto_F2_fold0_summary.txt
+
+==========================================
+Running gru inference for Ottawa
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+==========================================
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/gru_ood_inference.py:94: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Ottawa
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+Found 13 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/gru_single_train/Ottawa/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/13: 2024-01-19 03:00:00 to 2024-01-20 02:00:00
+  MAE: 49277.5065, RMSE: 59847.8807, MAPE: 14.22%, SMAPE: 14.33%
+
+Processing window 2/13: 2024-01-10 01:00:00 to 2024-01-11 00:00:00
+  MAE: 71071.8006, RMSE: 84927.5193, MAPE: 22.35%, SMAPE: 19.86%
+
+Processing window 3/13: 2023-12-04 03:00:00 to 2023-12-05 02:00:00
+  MAE: 50587.3175, RMSE: 59422.3682, MAPE: 16.06%, SMAPE: 15.17%
+
+Processing window 4/13: 2023-11-22 01:00:00 to 2023-11-23 00:00:00
+  MAE: 53463.4044, RMSE: 59579.1040, MAPE: 17.84%, SMAPE: 17.05%
+
+Processing window 5/13: 2024-03-09 23:00:00 to 2024-03-10 22:00:00
+  MAE: 49624.5749, RMSE: 59223.6752, MAPE: 14.73%, SMAPE: 13.48%
+
+Processing window 6/13: 2023-12-18 09:00:00 to 2023-12-19 08:00:00
+  MAE: 61210.1353, RMSE: 75840.5455, MAPE: 19.63%, SMAPE: 17.31%
+
+Processing window 7/13: 2023-10-07 03:00:00 to 2023-10-08 02:00:00
+  MAE: 53973.1825, RMSE: 65566.1276, MAPE: 19.85%, SMAPE: 17.42%
+
+Processing window 8/13: 2024-01-13 02:00:00 to 2024-01-14 01:00:00
+  MAE: 32689.3995, RMSE: 36378.0396, MAPE: 9.52%, SMAPE: 9.44%
+
+Processing window 9/13: 2024-02-19 09:00:00 to 2024-02-20 08:00:00
+  MAE: 87598.8770, RMSE: 105030.1023, MAPE: 24.34%, SMAPE: 20.95%
+
+Processing window 10/13: 2024-01-21 03:00:00 to 2024-01-22 02:00:00
+  MAE: 41565.5327, RMSE: 47150.6252, MAPE: 11.18%, SMAPE: 11.16%
+
+Processing window 11/13: 2023-12-10 07:00:00 to 2023-12-11 06:00:00
+  MAE: 32025.1897, RMSE: 37508.0641, MAPE: 9.96%, SMAPE: 9.44%
+
+Processing window 12/13: 2023-10-09 07:00:00 to 2023-10-10 06:00:00
+  MAE: 19990.7428, RMSE: 24971.7149, MAPE: 8.24%, SMAPE: 8.02%
+
+Processing window 13/13: 2024-02-23 19:00:00 to 2024-02-24 18:00:00
+  MAE: 41185.1697, RMSE: 47405.5418, MAPE: 13.10%, SMAPE: 14.31%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 13
+
+Average metrics across all OOD windows:
+  MAE:   49558.6795 ± 17516.1080
+  RMSE:  58680.8699 ± 21455.5801
+  MAPE:  15.46% ± 5.10%
+  SMAPE: 14.46% ± 4.07%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Ottawa_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Ottawa_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/gru/Ottawa_F2_fold0_summary.txt
+
+==========================================
+Running tcn inference for Ottawa
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/tcn_ood_inference.py:97: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Ottawa
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+Found 13 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/tcn_single_train/Ottawa/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/97/fold_0/best_model.pth
+
+Processing window 1/13: 2024-01-19 03:00:00 to 2024-01-20 02:00:00
+  MAE: 28571.4880, RMSE: 33513.6670, MAPE: 8.11%, SMAPE: 8.41%
+
+Processing window 2/13: 2024-01-10 01:00:00 to 2024-01-11 00:00:00
+  MAE: 15458.5401, RMSE: 19715.7932, MAPE: 5.45%, SMAPE: 5.24%
+
+Processing window 3/13: 2023-12-04 03:00:00 to 2023-12-05 02:00:00
+  MAE: 19469.9259, RMSE: 22793.9991, MAPE: 6.47%, SMAPE: 6.53%
+
+Processing window 4/13: 2023-11-22 01:00:00 to 2023-11-23 00:00:00
+  MAE: 15275.8717, RMSE: 20767.6307, MAPE: 5.85%, SMAPE: 5.67%
+
+Processing window 5/13: 2024-03-09 23:00:00 to 2024-03-10 22:00:00
+  MAE: 45569.8167, RMSE: 54878.7771, MAPE: 13.74%, SMAPE: 14.66%
+
+Processing window 6/13: 2023-12-18 09:00:00 to 2023-12-19 08:00:00
+  MAE: 16629.8495, RMSE: 21048.0361, MAPE: 5.95%, SMAPE: 5.72%
+
+Processing window 7/13: 2023-10-07 03:00:00 to 2023-10-08 02:00:00
+  MAE: 20952.1154, RMSE: 26803.3198, MAPE: 7.93%, SMAPE: 7.92%
+
+Processing window 8/13: 2024-01-13 02:00:00 to 2024-01-14 01:00:00
+  MAE: 22106.0762, RMSE: 27756.4503, MAPE: 6.69%, SMAPE: 6.68%
+
+Processing window 9/13: 2024-02-19 09:00:00 to 2024-02-20 08:00:00
+  MAE: 28653.4690, RMSE: 34211.6604, MAPE: 7.67%, SMAPE: 8.05%
+
+Processing window 10/13: 2024-01-21 03:00:00 to 2024-01-22 02:00:00
+  MAE: 31858.2413, RMSE: 36941.9535, MAPE: 8.04%, SMAPE: 8.41%
+
+Processing window 11/13: 2023-12-10 07:00:00 to 2023-12-11 06:00:00
+  MAE: 24510.8843, RMSE: 31376.7314, MAPE: 6.88%, SMAPE: 7.15%
+
+Processing window 12/13: 2023-10-09 07:00:00 to 2023-10-10 06:00:00
+  MAE: 28020.1309, RMSE: 37207.8950, MAPE: 9.27%, SMAPE: 9.78%
+
+Processing window 13/13: 2024-02-23 19:00:00 to 2024-02-24 18:00:00
+  MAE: 39874.9063, RMSE: 45933.4615, MAPE: 11.32%, SMAPE: 12.18%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 13
+
+Average metrics across all OOD windows:
+  MAE:   25919.3320 ± 9250.6381
+  RMSE:  31765.3366 ± 10419.3614
+  MAPE:  7.95% ± 2.35%
+  SMAPE: 8.18% ± 2.70%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Ottawa_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Ottawa_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/tcn/Ottawa_F2_fold0_summary.txt
+
+==========================================
+Running patchtst inference for Ottawa
+OOD file: /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+==========================================
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/torch/nn/modules/transformer.py:379: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+/usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/exps/ood_inference/patchtst_ood_inference.py:100: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(model_path, map_location=device))
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/usr/local/data/elisejzh/miniconda3/envs/scratch/lib/python3.10/site-packages/sklearn/utils/validation.py:2732: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+Starting OOD inference for Ottawa
+Feature set: F2, Fold: 0
+Loading data...
+Loading OOD windows from /home/automation/elisejzh/Desktop/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_windows_Ottawa_val.csv
+Found 13 OOD windows
+Loading model from /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/forecast1111/per_region/patchtst_single_train/Ottawa/dm64_nh4_nl3_pl16_ps8_inlen168_h24_scalerstandard/overlap/stride1/mean/bs64_ep500_lr0.0001_tr0.93_vr0.07_pat20_esep0.0001/F2/597/fold_0/best_model.pth
+
+Processing window 1/13: 2024-01-19 03:00:00 to 2024-01-20 02:00:00
+  MAE: 24275.2617, RMSE: 26859.1423, MAPE: 6.71%, SMAPE: 7.01%
+
+Processing window 2/13: 2024-01-10 01:00:00 to 2024-01-11 00:00:00
+  MAE: 14167.9741, RMSE: 18200.8652, MAPE: 4.20%, SMAPE: 4.08%
+
+Processing window 3/13: 2023-12-04 03:00:00 to 2023-12-05 02:00:00
+  MAE: 9336.9134, RMSE: 12785.1091, MAPE: 3.07%, SMAPE: 3.16%
+
+Processing window 4/13: 2023-11-22 01:00:00 to 2023-11-23 00:00:00
+  MAE: 11892.9130, RMSE: 14625.5556, MAPE: 4.00%, SMAPE: 4.10%
+
+Processing window 5/13: 2024-03-09 23:00:00 to 2024-03-10 22:00:00
+  MAE: 15254.8253, RMSE: 19344.5369, MAPE: 4.71%, SMAPE: 4.88%
+
+Processing window 6/13: 2023-12-18 09:00:00 to 2023-12-19 08:00:00
+  MAE: 6853.9975, RMSE: 11035.0753, MAPE: 2.34%, SMAPE: 2.41%
+
+Processing window 7/13: 2023-10-07 03:00:00 to 2023-10-08 02:00:00
+  MAE: 23604.1803, RMSE: 28930.3369, MAPE: 8.54%, SMAPE: 8.16%
+
+Processing window 8/13: 2024-01-13 02:00:00 to 2024-01-14 01:00:00
+  MAE: 12796.0070, RMSE: 14374.3409, MAPE: 3.69%, SMAPE: 3.67%
+
+Processing window 9/13: 2024-02-19 09:00:00 to 2024-02-20 08:00:00
+  MAE: 13566.1141, RMSE: 15308.4540, MAPE: 3.99%, SMAPE: 4.06%
+
+Processing window 10/13: 2024-01-21 03:00:00 to 2024-01-22 02:00:00
+  MAE: 18724.8169, RMSE: 21590.4491, MAPE: 4.95%, SMAPE: 5.14%
+
+Processing window 11/13: 2023-12-10 07:00:00 to 2023-12-11 06:00:00
+  MAE: 7790.8915, RMSE: 8938.4704, MAPE: 2.39%, SMAPE: 2.39%
+
+Processing window 12/13: 2023-10-09 07:00:00 to 2023-10-10 06:00:00
+  MAE: 14860.4586, RMSE: 17759.1449, MAPE: 5.54%, SMAPE: 5.64%
+
+Processing window 13/13: 2024-02-23 19:00:00 to 2024-02-24 18:00:00
+  MAE: 48498.7089, RMSE: 51056.2046, MAPE: 14.48%, SMAPE: 15.81%
+
+============================================================
+Summary Statistics
+============================================================
+Total OOD windows processed: 13
+
+Average metrics across all OOD windows:
+  MAE:   17047.9279 ± 10837.1332
+  RMSE:  20062.1296 ± 10953.6111
+  MAPE:  5.28% ± 3.25%
+  SMAPE: 5.42% ± 3.54%
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Ottawa_F2_fold0_ood_metrics.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Ottawa_F2_fold0_ood_predictions.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_inference/patchtst/Ottawa_F2_fold0_summary.txt
+
+==========================================
+All OOD inference runs completed!
+==========================================
+
+Results saved in:
+  - outputs/ood_inference/gru/
+  - outputs/ood_inference/tcn/
+  - outputs/ood_inference/patchtst/
+
+Each directory contains:
+  - *_ood_metrics.csv: Per-window metrics summary
+  - *_ood_predictions.csv: Detailed predictions for each timestep
+  - *_summary.txt: Text summary with statistics

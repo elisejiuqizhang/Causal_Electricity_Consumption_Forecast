@@ -1,0 +1,40 @@
+
+Processing GRU - Toronto
+  Normal MAE: 33250.62, OOD MAE: 27718.97 (-16.6%)
+  Normal RMSE: 43968.73, OOD RMSE: 33100.50 (-24.7%)
+  Normal MAPE: 5.86%, OOD MAPE: 4.52% (-22.8%)
+
+Processing TCN - Toronto
+  Normal MAE: 27172.80, OOD MAE: 29855.52 (+9.9%)
+  Normal RMSE: 36857.44, OOD RMSE: 34816.15 (-5.5%)
+  Normal MAPE: 4.74%, OOD MAPE: 4.81% (+1.4%)
+
+Processing PATCHTST - Toronto
+  Warning: Could not load normal metrics
+
+Processing GRU - Ottawa
+  Normal MAE: 17965.51, OOD MAE: 49558.68 (+175.9%)
+  Normal RMSE: 23606.77, OOD RMSE: 58680.87 (+148.6%)
+  Normal MAPE: 6.22%, OOD MAPE: 15.46% (+148.4%)
+
+Processing TCN - Ottawa
+  Normal MAE: 18218.02, OOD MAE: 25919.33 (+42.3%)
+  Normal RMSE: 22959.69, OOD RMSE: 31765.34 (+38.4%)
+  Normal MAPE: 6.21%, OOD MAPE: 7.95% (+28.1%)
+
+Processing PATCHTST - Ottawa
+  Warning: Could not load normal metrics
+
+================================================================================
+Summary
+================================================================================
+
+Results saved to:
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_vs_normal_comparison_F2_fold0.csv
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_vs_normal_summary_F2_fold0.txt
+  - /usr/local/data/elisejzh/Projects/Mine/Causal_Electricity_Consumption_Forecast/outputs/ood_analysis/ood_degradation_comparison_F2_fold0.png
+
+Overall average degradation:
+  MAE: +52.84%
+  RMSE: +39.17%
+  MAPE: +38.77%
