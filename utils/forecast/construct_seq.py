@@ -5,7 +5,7 @@ import torch
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target_col='TOTAL_CONSUMPTION'):
+def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target_col='TOTAL_CONSUMPTION', with_tgt=False):
     """
     Construct input-output sequences for time series forecasting - univariate output.
 
@@ -14,6 +14,8 @@ def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target
     - history_len: int, number of past time steps to use as input
     - horizon: int, number of future time steps to predict
     - step_size: int, step size between sequences
+    - target_col: str, column to predict
+    - with_tgt: bool, whether to include target column in input sequences
 
     Returns:
     - X: np.ndarray, input sequences of shape (num_samples, num_features, history_len)
@@ -21,7 +23,11 @@ def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target
     """
     data = df.values
     num_samples = (len(df) - history_len - horizon) // step_size + 1
-    num_features = data.shape[1]
+
+    if with_tgt:
+        num_features = data.shape[1]
+    else:
+        num_features = data.shape[1] - 1
 
     X = np.zeros((num_samples, num_features, history_len))
     Y = np.zeros((num_samples, horizon))
@@ -32,12 +38,17 @@ def construct_sequences_uni_output(df, history_len, horizon, step_size=1, target
         start_y = end_x
         end_y = start_y + horizon
 
-        X[i] = data[start_x:end_x].T  # Transpose to get shape (num_features, history_len)
+        if with_tgt:
+            X[i] = data[start_x:end_x].T  # Transpose to get shape (num_features, history_len)
+        else:
+            # Exclude target column from input features
+            input_cols = [col for col in df.columns if col != target_col]
+            X[i] = data[start_x:end_x, [df.columns.get_loc(col) for col in input_cols]].T
         Y[i] = data[start_y:end_y, df.columns.get_loc(target_col)]
 
     return X, Y
 
-def construct_sequences_multi_output(df, history_len, horizon, step_size=1, target_cols=['TOTAL_CONSUMPTION']):
+def construct_sequences_multi_output(df, history_len, horizon, step_size=1, target_cols=['TOTAL_CONSUMPTION'], with_tgt=False):
     """
     Construct input-output sequences for time series forecasting - multivariate output.
 
@@ -47,6 +58,7 @@ def construct_sequences_multi_output(df, history_len, horizon, step_size=1, targ
     - horizon: int, number of future time steps to predict
     - step_size: int, step size between sequences
     - target_cols: list of str, columns to predict
+    - with_tgt: bool, whether to include target columns in input sequences
 
     Returns:
     - X: np.ndarray, input sequences of shape (num_samples, num_features, history_len)
@@ -57,6 +69,11 @@ def construct_sequences_multi_output(df, history_len, horizon, step_size=1, targ
     num_features = data.shape[1]
     num_targets = len(target_cols)
 
+    if with_tgt:
+        num_features = data.shape[1]
+    else:
+        num_features = data.shape[1] - len(target_cols)
+
     X = np.zeros((num_samples, num_features, history_len))
     Y = np.zeros((num_samples, num_targets, horizon))
 
@@ -66,7 +83,12 @@ def construct_sequences_multi_output(df, history_len, horizon, step_size=1, targ
         start_y = end_x
         end_y = start_y + horizon
 
-        X[i] = data[start_x:end_x].T  # Transpose to get shape (num_features, history_len)
+        if with_tgt:
+            X[i] = data[start_x:end_x].T  # Transpose to get shape (num_features, history_len)
+        else:
+            # Exclude target columns from input features
+            input_cols = [col for col in df.columns if col not in target_cols]
+            X[i] = data[start_x:end_x, [df.columns.get_loc(col) for col in input_cols]].T
         for j, col in enumerate(target_cols):
             Y[i, j] = data[start_y:end_y, df.columns.get_loc(col)]
 
